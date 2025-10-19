@@ -1,6 +1,6 @@
 # Xypher Programming Language
 
-A modern compiled language with C/Rust-inspired syntax, featuring type safety and manual memory control. Built on LLVM for native performance.
+A compiled language featuring type safety and manual memory control. Built on LLVM for native performance.
 
 ## Features
 
@@ -188,7 +188,7 @@ Fork, create branch, commit, push, PR. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT License
+Apache 2.0 License
 
 ## Troubleshooting
 

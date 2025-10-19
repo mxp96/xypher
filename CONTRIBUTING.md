@@ -107,6 +107,6 @@ Be respectful, constructive, and professional.
 
 ## License
 
-By contributing, you agree to MIT License.
+By contributing, you agree to Apache 2.0 License.
 
 Thanks for making Xypher better!

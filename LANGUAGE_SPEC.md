@@ -4,7 +4,7 @@ Version 1.0.0
 
 ## Introduction
 
-Xypher is a statically-typed compiled language designed for systems programming with focus on safety and performance.
+Xypher is a statically-typed compiled language for systems programming with focus on safety and performance.
 
 ## Lexical Structure
 

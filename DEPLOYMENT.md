@@ -1,6 +1,6 @@
 # Deployment Guide
 
-How to package and distribute Xypher compiler and programs.
+Package and distribute Xypher compiler and programs.
 
 ## Compiler Distribution
 

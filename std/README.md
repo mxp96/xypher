@@ -152,9 +152,9 @@ std/
 
 ## Version
 
-Current version: 1.0.0
+1.0.0
 
 ## License
 
-Same as Xypher compiler (MIT License)
+Apache 2.0
 

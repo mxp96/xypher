@@ -12,7 +12,6 @@
 
 namespace xypher {
 
-// Common type aliases
 using String = std::string;
 using StringView = std::string_view;
 
@@ -31,7 +30,6 @@ using Optional = std::optional<T>;
 template<typename K, typename V>
 using Map = std::unordered_map<K, V>;
 
-// Helper functions
 template<typename T, typename... Args>
 Unique<T> makeUnique(Args&&... args) {
     return std::make_unique<T>(std::forward<Args>(args)...);
@@ -42,7 +40,6 @@ Shared<T> makeShared(Args&&... args) {
     return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
-} // namespace xypher
+}
 
 #endif
-
