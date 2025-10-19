@@ -203,18 +203,29 @@ func main() -> i32 {
 }
 ```
 
+## More Examples
+
+See `examples/` for more programs:
+- `arrays.xyp` - Array operations
+- `structs.xyp` - Struct patterns
+- `enums.xyp` - Enum constants
+- `pattern_matching.xyp` - Conditional patterns
+- `recursion.xyp` - Recursive algorithms
+- `advanced_math.xyp` - Math utilities
+- `string_ops.xyp` - String handling
+- `modules.xyp` - Module system demo
+
 ## Troubleshooting
 
-**Build fails?** Clean and retry: `rm -rf build && ./build.sh`  
-**LLVM not found?** Set: `export LLVM_DIR=/path/to/llvm`  
-**Runtime error?** Make sure `xystd.dll` is with your program
+**Build fails?** `.\build.bat clean && .\build.bat`  
+**LLVM not found?** Set `LLVM_DIR` environment variable  
+**Runtime error?** Ensure `xystd.dll` is in same folder
 
 ## Next Steps
 
-- Try examples in `examples/` folder
-- Read [LANGUAGE_SPEC.md](LANGUAGE_SPEC.md) for full syntax
-- See [BUILDING.md](BUILDING.md) for detailed build info
-- Check [STDLIB.md](STDLIB.md) for standard library docs
+- Try all examples: `.\build.bat test`
+- Read [LANGUAGE_SPEC.md](LANGUAGE_SPEC.md)
+- Check [STDLIB.md](STDLIB.md) for API
 
 ## Docs
 

@@ -22,12 +22,19 @@ public:
     const String& getMessage() const { return message_; }
     const SourceLocation& getLocation() const { return location_; }
     
+    void addSuggestion(const String& suggestion) {
+        suggestions_.push_back(suggestion);
+    }
+    
+    const Vec<String>& getSuggestions() const { return suggestions_; }
+    
     String format() const;
     
 private:
     DiagnosticLevel level_;
     String message_;
     SourceLocation location_;
+    Vec<String> suggestions_;
 };
 
 class DiagnosticEngine {

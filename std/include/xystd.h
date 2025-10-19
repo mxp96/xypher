@@ -62,8 +62,30 @@ XYSTD_API double xy_sqrt(double x);
 XYSTD_API double xy_pow(double base, double exp);
 XYSTD_API double xy_sin(double x);
 XYSTD_API double xy_cos(double x);
+XYSTD_API double xy_tan(double x);
 XYSTD_API double xy_abs_f64(double x);
 XYSTD_API int xy_abs_i32(int x);
+XYSTD_API double xy_floor(double x);
+XYSTD_API double xy_ceil(double x);
+XYSTD_API double xy_round(double x);
+XYSTD_API int xy_min_i32(int a, int b);
+XYSTD_API int xy_max_i32(int a, int b);
+XYSTD_API double xy_min_f64(double a, double b);
+XYSTD_API double xy_max_f64(double a, double b);
+
+// Array/Collection helpers
+XYSTD_API void xy_array_fill_i32(int* arr, unsigned long long size, int value);
+XYSTD_API void xy_array_copy_i32(int* dest, const int* src, unsigned long long size);
+XYSTD_API int xy_array_sum_i32(const int* arr, unsigned long long size);
+XYSTD_API int xy_array_min_i32(const int* arr, unsigned long long size);
+XYSTD_API int xy_array_max_i32(const int* arr, unsigned long long size);
+
+// File I/O
+XYSTD_API void* xy_file_open(const char* filename, const char* mode);
+XYSTD_API void xy_file_close(void* file);
+XYSTD_API unsigned long long xy_file_read(void* file, void* buffer, unsigned long long size);
+XYSTD_API unsigned long long xy_file_write(void* file, const void* buffer, unsigned long long size);
+XYSTD_API char* xy_file_read_all(const char* filename);
 
 // Runtime initialization
 XYSTD_API void xy_runtime_init(void);

@@ -34,8 +34,8 @@ if %ERRORLEVEL% neq 0 exit /b 1
 echo.
 echo === Build Complete ===
 echo Output: build\bin\
-echo   - xypc.exe
-echo   - xystd.dll
+echo   - xypc.exe (Compiler with JIT)
+echo   - xystd.dll (49 functions)
 
 if %RUN_TESTS%==1 (
     echo.

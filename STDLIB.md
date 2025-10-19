@@ -12,59 +12,36 @@ Location: `build/bin/`
 
 ## Modules
 
-### I/O
+### I/O (8 functions)
+Output: `xy_say_i32`, `xy_say_f64`, `xy_say_str`, `xy_say_newline`  
+Input: `xy_grab_i32`, `xy_grab_f64`, `xy_grab_str`
 
-```c
-void xy_say_i32(int value);
-void xy_say_f64(double value);
-void xy_say_str(const char* str);
-void xy_say_newline(void);
+### Debug (6 functions)
+Trace: `xy_trace_i32`, `xy_trace_f64`, `xy_trace_str`, etc.
 
-int xy_grab_i32(void);
-double xy_grab_f64(void);
-char* xy_grab_str(void);
-```
+### Memory (3 functions)
+`xy_alloc`, `xy_free`, `xy_realloc`
 
-### Debug
+### String (4 functions)
+`xy_strlen`, `xy_strcat`, `xy_strcmp`, `xy_strcpy`
 
-```c
-void xy_trace_i32(int value, const char* name);
-void xy_trace_f64(double value, const char* name);
-void xy_trace_str(const char* str, const char* name);
-```
+### Math (14 functions)
+Basic: `xy_sqrt`, `xy_pow`, `xy_sin`, `xy_cos`, `xy_tan`  
+Rounding: `xy_floor`, `xy_ceil`, `xy_round`  
+Comparison: `xy_min_i32`, `xy_max_i32`, `xy_min_f64`, `xy_max_f64`  
+Utils: `xy_abs_i32`, `xy_abs_f64`
 
-### Memory
+### Arrays (5 functions)
+`xy_array_fill_i32`, `xy_array_copy_i32`, `xy_array_sum_i32`  
+`xy_array_min_i32`, `xy_array_max_i32`
 
-```c
-void* xy_alloc(unsigned long long size);
-void xy_free(void* ptr);
-void* xy_realloc(void* ptr, unsigned long long size);
-```
+### File I/O (5 functions)
+`xy_file_open`, `xy_file_close`, `xy_file_read`, `xy_file_write`, `xy_file_read_all`
 
-### String
+### Runtime (4 functions)
+`xy_runtime_init`, `xy_runtime_cleanup`, `xy_panic`, `xy_assert`
 
-```c
-unsigned long long xy_strlen(const char* str);
-char* xy_strcat(const char* s1, const char* s2);
-int xy_strcmp(const char* s1, const char* s2);
-```
-
-### Math
-
-```c
-double xy_sqrt(double x);
-double xy_pow(double base, double exp);
-double xy_sin(double x);
-double xy_cos(double x);
-```
-
-### Runtime
-
-```c
-void xy_runtime_init(void);
-void xy_panic(const char* message);
-void xy_assert(int condition, const char* message);
-```
+**Total: 49 functions**
 
 ## Usage from Xypher
 

@@ -18,15 +18,23 @@ CodeGenerator::CodeGenerator(const String& moduleName, DiagnosticEngine& diags)
 CodeGenerator::~CodeGenerator() = default;
 
 bool CodeGenerator::generate(Program* program) {
-    declareBuiltins();
-    program->accept(*this);
-    
-    if (llvm::verifyModule(*module_, &llvm::errs())) {
-        error("Module verification failed");
+    try {
+        declareBuiltins();
+        program->accept(*this);
+        
+        if (llvm::verifyModule(*module_, &llvm::errs())) {
+            error("Module verification failed");
+            return false;
+        }
+        
+        return !diags_.hasErrors();
+    } catch (const std::exception& e) {
+        error(String("Code generation exception: ") + e.what());
+        return false;
+    } catch (...) {
+        error("Unknown code generation error");
         return false;
     }
-    
-    return !diags_.hasErrors();
 }
 
 void CodeGenerator::emitLLVMIR(const String& filename) {
@@ -544,74 +552,85 @@ void CodeGenerator::visit(TraceStmt* node) {
 }
 
 void CodeGenerator::visit(FuncDecl* node) {
-    String returnTypeName = node->getReturnType() ? 
-                           node->getReturnType()->getTypeName() : "void";
-    llvm::Type* returnType = getLLVMType(returnTypeName);
-    
-    std::vector<llvm::Type*> paramTypes;
-    for (const auto& param : node->getParams()) {
-        String paramTypeName = param.type ? param.type->getTypeName() : "i32";
-        paramTypes.push_back(getLLVMType(paramTypeName));
-    }
-    
-    llvm::FunctionType* funcType = llvm::FunctionType::get(
-        returnType, paramTypes, false
-    );
-    
-    llvm::Function* func = llvm::Function::Create(
-        funcType,
-        llvm::Function::ExternalLinkage,
-        node->getName(),
-        module_.get()
-    );
-    
-    functions_[node->getName()] = func;
-    
-    size_t idx = 0;
-    for (auto& arg : func->args()) {
-        arg.setName(node->getParams()[idx].name);
-        idx++;
-    }
-    
-    llvm::BasicBlock* bb = llvm::BasicBlock::Create(*context_, "entry", func);
-    builder_->SetInsertPoint(bb);
-    
-    currentFunction_ = func;
-    namedValues_.clear();
-    
-    idx = 0;
-    for (auto& arg : func->args()) {
-        llvm::AllocaInst* alloca = createEntryBlockAlloca(
-            func, 
-            String(arg.getName()), 
-            arg.getType()
-        );
-        builder_->CreateStore(&arg, alloca);
-        namedValues_[String(arg.getName())] = alloca;
-        idx++;
-    }
-    
-    if (node->getBody()) {
-        node->getBody()->accept(*this);
-    }
-    
-    if (!builder_->GetInsertBlock()->getTerminator()) {
-        if (returnType->isVoidTy()) {
-            builder_->CreateRetVoid();
-        } else {
-            builder_->CreateRet(llvm::Constant::getNullValue(returnType));
+    try {
+        String returnTypeName = node->getReturnType() ? 
+                               node->getReturnType()->getTypeName() : "void";
+        llvm::Type* returnType = getLLVMType(returnTypeName);
+        
+        std::vector<llvm::Type*> paramTypes;
+        for (const auto& param : node->getParams()) {
+            String paramTypeName = param.type ? param.type->getTypeName() : "i32";
+            paramTypes.push_back(getLLVMType(paramTypeName));
         }
-    }
-    
-    if (llvm::verifyFunction(*func, &llvm::errs())) {
-        error("Function verification failed: " + node->getName());
-        func->eraseFromParent();
+        
+        llvm::FunctionType* funcType = llvm::FunctionType::get(
+            returnType, paramTypes, false
+        );
+        
+        llvm::Function* func = llvm::Function::Create(
+            funcType,
+            llvm::Function::ExternalLinkage,
+            node->getName(),
+            module_.get()
+        );
+        
+        functions_[node->getName()] = func;
+        
+        size_t idx = 0;
+        for (auto& arg : func->args()) {
+            arg.setName(node->getParams()[idx].name);
+            idx++;
+        }
+        
+        llvm::BasicBlock* bb = llvm::BasicBlock::Create(*context_, "entry", func);
+        builder_->SetInsertPoint(bb);
+        
+        currentFunction_ = func;
+        namedValues_.clear();
+        
+        idx = 0;
+        for (auto& arg : func->args()) {
+            llvm::AllocaInst* alloca = createEntryBlockAlloca(
+                func, 
+                String(arg.getName()), 
+                arg.getType()
+            );
+            builder_->CreateStore(&arg, alloca);
+            namedValues_[String(arg.getName())] = alloca;
+            idx++;
+        }
+        
+        if (node->getBody()) {
+            node->getBody()->accept(*this);
+        }
+        
+        if (!builder_->GetInsertBlock()->getTerminator()) {
+            if (returnType->isVoidTy()) {
+                builder_->CreateRetVoid();
+            } else {
+                builder_->CreateRet(llvm::Constant::getNullValue(returnType));
+            }
+        }
+        
+        if (llvm::verifyFunction(*func, &llvm::errs())) {
+            std::cerr << "\nFunction verification failed: " << node->getName() << "\n";
+            error("Function verification failed: " + node->getName());
+            func->eraseFromParent();
+        }
+    } catch (const std::exception& e) {
+        error("Exception in function " + node->getName() + ": " + e.what());
     }
 }
 
 void CodeGenerator::visit(Program* node) {
-    for (const auto& decl : node->getDecls()) {
-        decl->accept(*this);
+    for (size_t i = 0; i < node->getDecls().size(); i++) {
+        const auto& decl = node->getDecls()[i];
+        try {
+            decl->accept(*this);
+        } catch (const std::exception& e) {
+            std::cerr << "Error processing declaration " << i << ": " << e.what() << "\n";
+            error(String("Declaration processing failed: ") + e.what());
+        }
     }
 }
 

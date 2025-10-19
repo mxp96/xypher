@@ -10,6 +10,8 @@ set(XYSTD_SOURCES
     src/memory.c
     src/string.c
     src/math.c
+    src/array.c
+    src/file.c
     src/runtime.c
 )
 

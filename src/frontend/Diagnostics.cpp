@@ -12,7 +12,13 @@ String Diagnostic::format() const {
         case DiagnosticLevel::Fatal:   levelStr = "fatal error"; break;
     }
     
-    return location_.toString() + ": " + levelStr + ": " + message_;
+    String result = location_.toString() + ": " + levelStr + ": " + message_;
+    
+    for (const auto& suggestion : suggestions_) {
+        result += "\n  suggestion: " + suggestion;
+    }
+    
+    return result;
 }
 
 void DiagnosticEngine::report(DiagnosticLevel level, const String& message, SourceLocation loc) {

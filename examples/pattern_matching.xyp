@@ -1,0 +1,86 @@
+func matchNumber(n: i32) -> str {
+    if (n == 0) {
+        return "zero";
+    }
+    if (n == 1) {
+        return "one";
+    }
+    if (n == 2) {
+        return "two";
+    }
+    if (n == 3) {
+        return "three";
+    }
+    return "other";
+}
+
+func classifyNumber(n: i32) -> void {
+    say("Number:", n);
+    
+    if (n < 0) {
+        say("  Category: Negative");
+    } else {
+        if (n == 0) {
+            say("  Category: Zero");
+        } else {
+            if (n < 10) {
+                say("  Category: Single digit");
+            } else {
+                if (n < 100) {
+                    say("  Category: Double digit");
+                } else {
+                    say("  Category: Large number");
+                }
+            }
+        }
+    }
+}
+
+func fizzBuzz(n: i32) -> void {
+    let i: i32 = 1;
+    
+    loopwhile (i <= n) {
+        let isMod3: bool = (i % 3 == 0);
+        let isMod5: bool = (i % 5 == 0);
+        
+        if (isMod3 && isMod5) {
+            say("FizzBuzz");
+        } else {
+            if (isMod3) {
+                say("Fizz");
+            } else {
+                if (isMod5) {
+                    say("Buzz");
+                } else {
+                    say(i);
+                }
+            }
+        }
+        
+        i = i + 1;
+    }
+}
+
+func main() -> i32 {
+    say("Pattern matching simulation");
+    
+    say("\n=== Number Matching ===");
+    let i: i32 = 0;
+    loopwhile (i <= 5) {
+        say(i, "->", matchNumber(i));
+        i = i + 1;
+    }
+    
+    say("\n=== Number Classification ===");
+    classifyNumber(-5);
+    classifyNumber(0);
+    classifyNumber(7);
+    classifyNumber(42);
+    classifyNumber(150);
+    
+    say("\n=== FizzBuzz ===");
+    fizzBuzz(15);
+    
+    return 0;
+}
+

@@ -257,10 +257,15 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
+    std::cout << "Reading: " << opts.inputFile << "\n";
+    
     String source = readFile(opts.inputFile);
     if (source.empty()) {
+        std::cerr << "Error: Empty or unreadable file\n";
         return 1;
     }
+    
+    std::cout << "Parsing...\n";
     
     DiagnosticEngine diags;
     Lexer lexer(source, opts.inputFile);
@@ -284,19 +289,42 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     
+    std::cout << "Analyzing...\n";
+    
     SemanticAnalyzer analyzer(diags);
     if (!analyzer.analyze(program.get())) {
         std::cerr << "Semantic analysis failed with " << diags.getErrorCount() << " error(s)\n";
         return 1;
     }
     
+    std::cout << "Generating code...\n";
+    std::cout.flush();
+    
     CodeGenerator codegen(opts.inputFile, diags);
-    if (!codegen.generate(program.get())) {
-        std::cerr << "Code generation failed\n";
+    
+    bool codegenSuccess = false;
+    try {
+        codegenSuccess = codegen.generate(program.get());
+    } catch (const std::exception& e) {
+        std::cerr << "Code generation exception: " << e.what() << "\n";
+        return 1;
+    } catch (...) {
+        std::cerr << "Unknown code generation error\n";
         return 1;
     }
     
+    if (!codegenSuccess) {
+        std::cerr << "Code generation failed\n";
+        if (diags.hasErrors()) {
+            std::cerr << "Errors: " << diags.getErrorCount() << "\n";
+        }
+        return 1;
+    }
+    
+    std::cout << "Code generation complete\n";
+    
     if (opts.optLevel > 0) {
+        std::cout << "Optimizing (O" << opts.optLevel << ")...\n";
         OptimizationLevel level = static_cast<OptimizationLevel>(opts.optLevel);
         Optimizer::optimize(codegen.getModule(), level);
     }
@@ -331,14 +359,14 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
+    std::cout << "Compiling to object...\n";
+    
     if (!codegen.compileToObject(objFile)) {
         std::cerr << "Failed to generate object file\n";
         return 1;
     }
     
-    if (opts.debugMode) {
-        std::cout << "Generated object file: " << objFile << "\n";
-    }
+    std::cout << "Linking...\n";
     
     if (!linkExecutable(objFile, opts.outputFile)) {
         std::cerr << "Failed to link executable\n";
@@ -346,15 +374,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
-    if (opts.debugMode) {
 #ifdef _WIN32
-        std::cout << "Generated executable: " << opts.outputFile << ".exe\n";
+    std::cout << "Success: " << opts.outputFile << ".exe\n";
 #else
-        std::cout << "Generated executable: " << opts.outputFile << "\n";
+    std::cout << "Success: " << opts.outputFile << "\n";
 #endif
-    } else {
-        std::cout << "Compilation successful\n";
-    }
     
     return 0;
 }

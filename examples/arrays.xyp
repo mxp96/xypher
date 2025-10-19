@@ -1,0 +1,80 @@
+func arraySum(arr: i32, size: i32) -> i32 {
+    let sum: i32 = 0;
+    let i: i32 = 0;
+    
+    loopwhile (i < size) {
+        sum = sum + arr;
+        i = i + 1;
+    }
+    
+    return sum;
+}
+
+func arrayMin(arr: i32, size: i32) -> i32 {
+    if (size == 0) {
+        return 0;
+    }
+    
+    let min: i32 = arr;
+    let i: i32 = 1;
+    
+    loopwhile (i < size) {
+        if (arr < min) {
+            min = arr;
+        }
+        i = i + 1;
+    }
+    
+    return min;
+}
+
+func arrayMax(arr: i32, size: i32) -> i32 {
+    if (size == 0) {
+        return 0;
+    }
+    
+    let max: i32 = arr;
+    let i: i32 = 1;
+    
+    loopwhile (i < size) {
+        if (arr > max) {
+            max = arr;
+        }
+        i = i + 1;
+    }
+    
+    return max;
+}
+
+func printArray(arr: i32, size: i32) -> void {
+    let i: i32 = 0;
+    say("[");
+    
+    loopwhile (i < size) {
+        say(arr);
+        if (i < size - 1) {
+            say(",");
+        }
+        i = i + 1;
+    }
+    
+    say("]");
+}
+
+func main() -> i32 {
+    let numbers: i32 = 5;
+    
+    say("Array operations demo");
+    
+    let total: i32 = arraySum(numbers, 5);
+    say("Sum:", total);
+    
+    let minimum: i32 = arrayMin(numbers, 5);
+    say("Min:", minimum);
+    
+    let maximum: i32 = arrayMax(numbers, 5);
+    say("Max:", maximum);
+    
+    return 0;
+}
+

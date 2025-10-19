@@ -9,7 +9,7 @@ A compiled language featuring type safety and manual memory control. Built on LL
 - Cross-platform (Windows, Linux, macOS)
 - Unique syntax with `say()`, `trace()`, `loopwhile()`
 - Optimization levels O0-O3
-- Separate standard library (xystd.dll/.so/.dylib)
+- Standard library with 25+ functions (I/O, math, arrays, files)
 
 ## Quick Example
 
@@ -167,19 +167,31 @@ Components:
 
 ## Examples
 
-See `examples/` directory:
+Basic:
 - `hello.xyp` - Hello World
-- `functions.xyp` - Functions and recursion
-- `fibonacci.xyp` - Fibonacci (recursive & iterative)
 - `variables.xyp` - Variable types
+- `functions.xyp` - Functions
 - `control_flow.xyp` - Loops and conditionals
+
+Intermediate:
+- `fibonacci.xyp` - Fibonacci sequence
+- `recursion.xyp` - Recursive algorithms
+- `advanced_math.xyp` - GCD, LCM, primes
+- `arrays.xyp` - Array operations
+- `string_ops.xyp` - String manipulation
+
+Advanced:
+- `structs.xyp` - Struct simulation
+- `enums.xyp` - Enum patterns
+- `pattern_matching.xyp` - Pattern matching simulation
+- `modules.xyp` - Module system demo
 - `math_operations.xyp` - Math operators
 - `trace_debug.xyp` - Debug tracing
 
 ## Roadmap
 
-**v1.0** (Current): Basic compiler, LLVM backend, standard library  
-**v1.1** (Planned): Modules, structs, enums, pattern matching  
+**v1.0** (Current): Compiler, LLVM backend, stdlib (49 functions), JIT foundation  
+**v1.1** (Next): Full modules, structs, enums, pattern matching syntax  
 **v2.0** (Future): Async/await, generics, LSP, package manager
 
 ## Contributing

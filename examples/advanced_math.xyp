@@ -1,0 +1,106 @@
+func min(a: i32, b: i32) -> i32 {
+    if (a < b) {
+        return a;
+    }
+    return b;
+}
+
+func max(a: i32, b: i32) -> i32 {
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+
+func clamp(value: i32, minVal: i32, maxVal: i32) -> i32 {
+    if (value < minVal) {
+        return minVal;
+    }
+    if (value > maxVal) {
+        return maxVal;
+    }
+    return value;
+}
+
+func gcd(a: i32, b: i32) -> i32 {
+    loopwhile (b != 0) {
+        let temp: i32 = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+func lcm(a: i32, b: i32) -> i32 {
+    return (a * b) / gcd(a, b);
+}
+
+func isPrime(n: i32) -> bool {
+    if (n < 2) {
+        return false;
+    }
+    
+    let i: i32 = 2;
+    loopwhile (i * i <= n) {
+        if (n % i == 0) {
+            return false;
+        }
+        i = i + 1;
+    }
+    
+    return true;
+}
+
+func sumOfDigits(n: i32) -> i32 {
+    let sum: i32 = 0;
+    
+    loopwhile (n > 0) {
+        sum = sum + (n % 10);
+        n = n / 10;
+    }
+    
+    return sum;
+}
+
+func reverseNumber(n: i32) -> i32 {
+    let reversed: i32 = 0;
+    
+    loopwhile (n > 0) {
+        reversed = reversed * 10 + (n % 10);
+        n = n / 10;
+    }
+    
+    return reversed;
+}
+
+func main() -> i32 {
+    say("Advanced Math Operations");
+    
+    say("\n=== Min/Max ===");
+    say("min(10, 20) =", min(10, 20));
+    say("max(10, 20) =", max(10, 20));
+    say("clamp(15, 0, 10) =", clamp(15, 0, 10));
+    say("clamp(5, 0, 10) =", clamp(5, 0, 10));
+    
+    say("\n=== GCD and LCM ===");
+    say("gcd(48, 18) =", gcd(48, 18));
+    say("lcm(12, 18) =", lcm(12, 18));
+    
+    say("\n=== Prime Numbers ===");
+    let i: i32 = 1;
+    loopwhile (i <= 20) {
+        if (isPrime(i)) {
+            say(i, "is prime");
+        }
+        i = i + 1;
+    }
+    
+    say("\n=== Number Utilities ===");
+    let num: i32 = 12345;
+    say("Number:", num);
+    say("Sum of digits:", sumOfDigits(num));
+    say("Reversed:", reverseNumber(num));
+    
+    return 0;
+}
+

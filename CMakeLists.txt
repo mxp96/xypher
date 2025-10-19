@@ -108,6 +108,8 @@ set(AST_SOURCES
     src/ast/AST.cpp
     src/ast/ASTVisitor.cpp
     src/ast/ASTDumper.cpp
+    src/ast/Module.cpp
+    src/ast/Types.cpp
 )
 
 set(SEMA_SOURCES
@@ -129,6 +131,7 @@ set(FRONTEND_SOURCES
 set(BACKEND_SOURCES
     src/backend/Optimizer.cpp
     src/backend/TargetMachine.cpp
+    src/backend/JIT.cpp
 )
 
 set(RUNTIME_SOURCES

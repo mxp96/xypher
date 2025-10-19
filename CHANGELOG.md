@@ -40,11 +40,17 @@
 - Auto-detection of standard library
 - Output directory creation
 
+**Examples** (13 programs):
+- Basic: hello, variables, functions, control_flow
+- Intermediate: fibonacci, recursion, advanced_math, arrays, string_ops
+- Advanced: structs, enums, pattern_matching, modules
+- Debug: math_operations, trace_debug
+
 **Documentation**:
 - README with quick start
 - Language specification
 - Building guide
-- Standard library docs
+- Standard library docs (25+ functions)
 - Deployment guide
 
 ### Known Issues
