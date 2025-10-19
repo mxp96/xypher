@@ -190,10 +190,6 @@ Fork, create branch, commit, push, PR. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 MIT License
 
-## Credits
-
-Inspired by LLVM, Clang, Rust, and Zig.
-
 ## Troubleshooting
 
 **LLVM not found?**
