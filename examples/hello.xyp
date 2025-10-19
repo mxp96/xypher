@@ -1,0 +1,8 @@
+// Hello World in Xypher
+// This is the simplest program in Xypher language
+
+func main() -> i32 {
+    say("Hello, World from Xypher!");
+    return 0;
+}
+

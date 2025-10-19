@@ -1,0 +1,42 @@
+// Using trace for debugging in Xypher
+
+func processData(value: i32) -> i32 {
+    trace(value);
+    
+    let result: i32 = value * 2;
+    trace(result);
+    
+    result = result + 10;
+    trace(result);
+    
+    return result;
+}
+
+func complexCalculation(a: i32, b: i32) -> i32 {
+    trace(a);
+    trace(b);
+    
+    let step1: i32 = a + b;
+    trace(step1);
+    
+    let step2: i32 = step1 * 3;
+    trace(step2);
+    
+    let final: i32 = step2 - 5;
+    trace(final);
+    
+    return final;
+}
+
+func main() -> i32 {
+    say("Processing data:");
+    let result1: i32 = processData(10);
+    say("Result:", result1);
+    
+    say("\nComplex calculation:");
+    let result2: i32 = complexCalculation(5, 7);
+    say("Final result:", result2);
+    
+    return 0;
+}
+

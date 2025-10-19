@@ -1,0 +1,50 @@
+// Fibonacci sequence in Xypher
+
+func fibonacci(n: i32) -> i32 {
+    if (n <= 1) {
+        return n;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+func fibonacciIterative(n: i32) -> i32 {
+    if (n <= 1) {
+        return n;
+    }
+    
+    let a: i32 = 0;
+    let b: i32 = 1;
+    let i: i32 = 2;
+    
+    loopwhile (i <= n) {
+        let temp: i32 = a + b;
+        a = b;
+        b = temp;
+        i = i + 1;
+    }
+    
+    return b;
+}
+
+func main() -> i32 {
+    say("Fibonacci sequence (recursive):");
+    let i: i32 = 0;
+    
+    loopwhile (i < 10) {
+        let fib: i32 = fibonacci(i);
+        say("F(", i, ") =", fib);
+        i = i + 1;
+    }
+    
+    say("\nFibonacci sequence (iterative):");
+    i = 0;
+    
+    loopwhile (i < 10) {
+        let fib: i32 = fibonacciIterative(i);
+        say("F(", i, ") =", fib);
+        i = i + 1;
+    }
+    
+    return 0;
+}
+

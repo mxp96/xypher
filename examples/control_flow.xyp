@@ -1,0 +1,48 @@
+// Control flow in Xypher
+
+func checkNumber(num: i32) -> void {
+    if (num > 0) {
+        say("Positive number");
+    } else {
+        if (num < 0) {
+            say("Negative number");
+        } else {
+            say("Zero");
+        }
+    }
+}
+
+func countDown(n: i32) -> void {
+    loopwhile (n > 0) {
+        say("Count:", n);
+        n = n - 1;
+    }
+    say("Lift off!");
+}
+
+func sumUpTo(n: i32) -> i32 {
+    let sum: i32 = 0;
+    let i: i32 = 1;
+    
+    loopwhile (i <= n) {
+        sum = sum + i;
+        i = i + 1;
+    }
+    
+    return sum;
+}
+
+func main() -> i32 {
+    checkNumber(42);
+    checkNumber(-10);
+    checkNumber(0);
+    
+    say("Counting down:");
+    countDown(5);
+    
+    let total: i32 = sumUpTo(10);
+    say("Sum from 1 to 10:", total);
+    
+    return 0;
+}
+

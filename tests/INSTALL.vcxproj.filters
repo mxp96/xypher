@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\private\stuffff\xypher-lang\CMakeFiles\e328db84de0b81ca1af6157f7b314b19\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{78ED18B2-E2EA-3064-9DFB-C7B4B8046D25}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

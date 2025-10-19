@@ -1,0 +1,27 @@
+// Variable declarations and types in Xypher
+
+func main() -> i32 {
+    // Let declares a mutable variable
+    let x: i32 = 42;
+    let y: f64 = 3.14159;
+    
+    // Const declares an immutable variable
+    const name: str = "Xypher";
+    const isReady: bool = true;
+    
+    // Own declares an owned variable (explicit ownership)
+    own data: i32 = 100;
+    
+    say("Variable x:", x);
+    say("Variable y:", y);
+    say("Name:", name);
+    say("Ready:", isReady);
+    say("Owned data:", data);
+    
+    // Modify mutable variable
+    x = x + 10;
+    say("Modified x:", x);
+    
+    return 0;
+}
+
