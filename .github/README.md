@@ -5,8 +5,8 @@
 ### Test Workflow (`test.yml`)
 
 Runs automatically on:
-- Every push to `main` or `develop` branch
-- Every pull request to `main`
+- Every push to `master` or `develop` branch
+- Every pull request to `master`
 - Weekly schedule (Sunday 00:00 UTC)
 
 Tests on: Linux, macOS, Windows
