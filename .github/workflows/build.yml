@@ -1,0 +1,101 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target platform'
+        required: true
+        type: choice
+        options:
+          - linux
+          - windows
+          - macos
+          - all
+
+jobs:
+  build-linux:
+    if: github.event.inputs.target == 'linux' || github.event.inputs.target == 'all'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y llvm-14-dev clang cmake build-essential
+    
+    - name: Build
+      run: |
+        chmod +x build.sh
+        ./build.sh
+    
+    - name: Package
+      run: |
+        mkdir -p dist
+        cp -r build/bin dist/xypher-linux-x64
+        tar czf xypher-linux-x64.tar.gz -C dist xypher-linux-x64
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: xypher-linux-x64
+        path: xypher-linux-x64.tar.gz
+  
+  build-windows:
+    if: github.event.inputs.target == 'windows' || github.event.inputs.target == 'all'
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Dependencies
+      run: |
+        choco install llvm cmake
+    
+    - name: Build
+      run: |
+        .\build.bat
+    
+    - name: Package
+      run: |
+        mkdir dist
+        xcopy /E /I build\bin dist\xypher-windows-x64
+        Compress-Archive -Path dist\xypher-windows-x64 -DestinationPath xypher-windows-x64.zip
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: xypher-windows-x64
+        path: xypher-windows-x64.zip
+  
+  build-macos:
+    if: github.event.inputs.target == 'macos' || github.event.inputs.target == 'all'
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Dependencies
+      run: |
+        brew install llvm cmake
+    
+    - name: Build
+      run: |
+        chmod +x build.sh
+        export PATH="$(brew --prefix llvm)/bin:$PATH"
+        ./build.sh
+    
+    - name: Package
+      run: |
+        mkdir -p dist
+        cp -r build/bin dist/xypher-macos-arm64
+        tar czf xypher-macos-arm64.tar.gz -C dist xypher-macos-arm64
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: xypher-macos-arm64
+        path: xypher-macos-arm64.tar.gz
+

@@ -1,0 +1,14 @@
+build/
+output/
+.git/
+.github/
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.obj
+.vscode/
+.idea/
+*.log
+

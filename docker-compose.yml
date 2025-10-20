@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  xypher:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: xypher:latest
+    container_name: xypher-compiler
+    volumes:
+      - ./examples:/workspace/examples
+      - ./output:/workspace/output
+    working_dir: /workspace
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+

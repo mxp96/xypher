@@ -72,7 +72,7 @@ cd xypher-lang
 ./build.sh         # Linux/macOS
 ```
 
-Output: `build/bin/xypc` and `build/bin/xystd.dll`
+Output: `build/bin/`
 
 ## Usage
 
@@ -187,6 +187,15 @@ Advanced:
 - `math_operations.xyp` - Math operators
 - `trace_debug.xyp` - Debug tracing
 
+## Docker
+
+```bash
+docker-compose up -d
+docker-compose exec xypher bash
+```
+
+See [docker/README.md](docker/README.md)
+
 ## Roadmap
 
 **v1.0** (Current): Basic compiler and standard library  
@@ -215,4 +224,3 @@ rm -rf build && mkdir build && cd build && cmake ..
 
 **Library not found at runtime?**
 Copy `xystd.dll` to same folder as your program.
-
