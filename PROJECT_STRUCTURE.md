@@ -2,45 +2,6 @@
 
 Overview of Xypher codebase organization.
 
-## Directory Layout
-
-```
-xypher-lang/
-├── include/          # Headers
-│   ├── ast/         # AST nodes
-│   ├── backend/     # Optimizer, target machine
-│   ├── codegen/     # Code generator
-│   ├── frontend/    # Diagnostics, locations
-│   ├── lexer/       # Tokenizer
-│   ├── parser/      # Parser
-│   └── sema/        # Type checker, symbol table
-├── src/             # Implementation
-│   ├── ast/
-│   ├── backend/
-│   ├── codegen/
-│   ├── frontend/
-│   ├── lexer/
-│   ├── parser/
-│   ├── sema/
-│   └── main.cpp     # Compiler entry
-├── std/             # Standard library
-│   ├── include/
-│   │   └── xystd.h  # Public API
-│   └── src/
-│       ├── io.c
-│       ├── debug.c
-│       ├── memory.c
-│       ├── string.c
-│       ├── math.c
-│       └── runtime.c
-├── examples/        # Sample programs
-├── build/
-│   └── bin/         # Compiled binaries
-│       ├── xypc(.exe)
-│       └── xystd.dll/.so
-└── CMakeLists.txt
-```
-
 ## Components
 
 ### Frontend
