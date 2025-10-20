@@ -3,9 +3,11 @@ FROM alpine:latest
 RUN apk add --no-cache \
     build-base \
     cmake \
-    llvm-dev \
+    llvm14-dev \
+    llvm14-static \
     clang \
     clang-dev \
+    libffi-dev \
     git \
     bash
 

@@ -24,7 +24,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y llvm-14-dev clang cmake build-essential
+        sudo apt-get install -y llvm-14-dev clang-14 cmake build-essential libffi-dev
     
     - name: Build
       run: |
