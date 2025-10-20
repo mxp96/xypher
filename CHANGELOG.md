@@ -27,12 +27,7 @@
 
 **Standard Library**:
 - Shared library (xystd.dll/.so/.dylib)
-- I/O functions
-- Debug tracing
-- Memory management
-- String operations
-- Math functions
-- Runtime support
+- I/O, debug, memory, string, math, array, file operations
 
 **Tooling**:
 - Build scripts for all platforms
@@ -47,10 +42,8 @@
 - Debug: math_operations, trace_debug
 
 **Documentation**:
-- README with quick start
-- Language specification
-- Building guide
-- Standard library docs (25+ functions)
+- README, language spec, build guide
+- Standard library API docs
 - Deployment guide
 
 ### Known Issues

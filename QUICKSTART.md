@@ -1,6 +1,6 @@
 # Xypher Quick Start
 
-Get started with Xypher in 5 minutes.
+Get started with Xypher.
 
 ## Install
 

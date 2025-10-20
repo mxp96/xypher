@@ -1,6 +1,6 @@
-# Xypher Standard Library (xystd)
+# Xypher Standard Library
 
-Standard library untuk bahasa pemrograman Xypher, dikompilasi sebagai shared library.
+Compiled as shared library (xystd.dll/.so/.dylib).
 
 ## Library Names by Platform
 
@@ -8,14 +8,9 @@ Standard library untuk bahasa pemrograman Xypher, dikompilasi sebagai shared lib
 - **Linux**: `libxystd.so`
 - **macOS**: `libxystd.dylib`
 
-## Installation
+## Build
 
-Library otomatis di-build bersama compiler dan disimpan di:
-```
-build/bin/xystd.dll      (Windows)
-build/bin/libxystd.so    (Linux)
-build/bin/libxystd.dylib (macOS)
-```
+Built automatically with compiler. Output: `build/bin/`
 
 ## API Functions
 

@@ -257,15 +257,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
-    std::cout << "Reading: " << opts.inputFile << "\n";
-    
     String source = readFile(opts.inputFile);
     if (source.empty()) {
-        std::cerr << "Error: Empty or unreadable file\n";
+        std::cerr << "Error: Cannot read file: " << opts.inputFile << "\n";
         return 1;
     }
-    
-    std::cout << "Parsing...\n";
     
     DiagnosticEngine diags;
     Lexer lexer(source, opts.inputFile);
@@ -274,12 +270,11 @@ int main(int argc, char* argv[]) {
     auto program = parser.parseProgram();
     
     if (diags.hasErrors()) {
-        std::cerr << "Parsing failed with " << diags.getErrorCount() << " error(s)\n";
         return 1;
     }
     
     if (opts.checkSyntaxOnly) {
-        std::cout << "Syntax check passed\n";
+        std::cout << "Syntax OK\n";
         return 0;
     }
     
@@ -289,95 +284,55 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     
-    std::cout << "Analyzing...\n";
-    
     SemanticAnalyzer analyzer(diags);
     if (!analyzer.analyze(program.get())) {
-        std::cerr << "Semantic analysis failed with " << diags.getErrorCount() << " error(s)\n";
         return 1;
     }
-    
-    std::cout << "Generating code...\n";
-    std::cout.flush();
     
     CodeGenerator codegen(opts.inputFile, diags);
     
-    bool codegenSuccess = false;
-    try {
-        codegenSuccess = codegen.generate(program.get());
-    } catch (const std::exception& e) {
-        std::cerr << "Code generation exception: " << e.what() << "\n";
-        return 1;
-    } catch (...) {
-        std::cerr << "Unknown code generation error\n";
+    if (!codegen.generate(program.get())) {
         return 1;
     }
-    
-    if (!codegenSuccess) {
-        std::cerr << "Code generation failed\n";
-        if (diags.hasErrors()) {
-            std::cerr << "Errors: " << diags.getErrorCount() << "\n";
-        }
-        return 1;
-    }
-    
-    std::cout << "Code generation complete\n";
     
     if (opts.optLevel > 0) {
-        std::cout << "Optimizing (O" << opts.optLevel << ")...\n";
         OptimizationLevel level = static_cast<OptimizationLevel>(opts.optLevel);
         Optimizer::optimize(codegen.getModule(), level);
     }
     
-    // Create output directory if needed
+    std::cout << "Compiling...\n";
+    
     if (!createDirectoryIfNeeded(opts.outputFile)) {
         return 1;
     }
     
     if (opts.emitLLVM) {
         String llFile = opts.outputFile + ".ll";
-        if (!createDirectoryIfNeeded(llFile)) {
-            return 1;
-        }
         codegen.emitLLVMIR(llFile);
-        std::cout << "Generated LLVM IR: " << llFile << "\n";
+        std::cout << "Generated: " << llFile << "\n";
         return 0;
     }
     
     if (opts.emitASM) {
-        String asmFile = opts.outputFile + ".s";
-        if (!createDirectoryIfNeeded(asmFile)) {
-            return 1;
-        }
-        // Would emit assembly here
-        std::cout << "Assembly output not yet implemented\n";
+        std::cout << "Assembly output not implemented\n";
         return 0;
     }
     
     String objFile = opts.outputFile + ".o";
-    if (!createDirectoryIfNeeded(objFile)) {
-        return 1;
-    }
-    
-    std::cout << "Compiling to object...\n";
-    
     if (!codegen.compileToObject(objFile)) {
-        std::cerr << "Failed to generate object file\n";
+        std::cerr << "Failed to compile\n";
         return 1;
     }
-    
-    std::cout << "Linking...\n";
     
     if (!linkExecutable(objFile, opts.outputFile)) {
-        std::cerr << "Failed to link executable\n";
-        std::cerr << "Note: Make sure clang is installed and in PATH\n";
+        std::cerr << "Linking failed\n";
         return 1;
     }
     
 #ifdef _WIN32
-    std::cout << "Success: " << opts.outputFile << ".exe\n";
+    std::cout << "Output: " << opts.outputFile << ".exe\n";
 #else
-    std::cout << "Success: " << opts.outputFile << "\n";
+    std::cout << "Output: " << opts.outputFile << "\n";
 #endif
     
     return 0;

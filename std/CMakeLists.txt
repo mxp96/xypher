@@ -51,6 +51,7 @@ install(TARGETS xystd
 add_custom_command(TARGET xystd POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:xystd> ${CMAKE_BINARY_DIR}/bin/
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_LINKER_FILE:xystd> ${CMAKE_BINARY_DIR}/bin/
     COMMENT "Copying xystd library to bin directory"
 )
 

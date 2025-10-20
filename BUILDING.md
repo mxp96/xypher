@@ -16,7 +16,7 @@ Quick build instructions for all platforms.
 ./build.bat test   # Build and test
 ```
 
-Output: `build/bin/xypc` and `build/bin/xystd.dll`
+Output: `build/bin/`
 
 ## Platform-Specific
 

@@ -125,18 +125,28 @@ void CodeGenerator::visit(BoolLiteral* node) {
 }
 
 void CodeGenerator::visit(Identifier* node) {
-    auto it = namedValues_.find(node->getName());
-    if (it == namedValues_.end()) {
-        error("Unknown variable: " + node->getName());
-        currentValue_ = nullptr;
+    auto localIt = namedValues_.find(node->getName());
+    if (localIt != namedValues_.end()) {
+        currentValue_ = builder_->CreateLoad(
+            localIt->second->getAllocatedType(),
+            localIt->second,
+            node->getName()
+        );
         return;
     }
     
-    currentValue_ = builder_->CreateLoad(
-        it->second->getAllocatedType(),
-        it->second,
-        node->getName()
-    );
+    auto globalIt = globalValues_.find(node->getName());
+    if (globalIt != globalValues_.end()) {
+        currentValue_ = builder_->CreateLoad(
+            globalIt->second->getValueType(),
+            globalIt->second,
+            node->getName()
+        );
+        return;
+    }
+    
+    error("Unknown variable: " + node->getName());
+    currentValue_ = nullptr;
 }
 
 void CodeGenerator::visit(BinaryExpr* node) {
@@ -367,6 +377,35 @@ void CodeGenerator::visit(ExprStmt* node) {
 }
 
 void CodeGenerator::visit(VarDecl* node) {
+    if (!currentFunction_) {
+        String typeName = node->getType() ? node->getType()->getTypeName() : "i32";
+        llvm::Type* type = getLLVMType(typeName);
+        
+        llvm::Constant* initializer = llvm::Constant::getNullValue(type);
+        
+        if (node->getInit()) {
+            node->getInit()->accept(*this);
+            if (currentValue_) {
+                if (auto* constant = llvm::dyn_cast<llvm::Constant>(currentValue_)) {
+                    initializer = constant;
+                }
+            }
+        }
+        
+        auto* globalVar = new llvm::GlobalVariable(
+            *module_,
+            type,
+            node->isConst(),
+            llvm::GlobalValue::InternalLinkage,
+            initializer,
+            node->getName()
+        );
+        
+        globalValues_[node->getName()] = globalVar;
+        
+        return;
+    }
+    
     String typeName = node->getType() ? node->getType()->getTypeName() : "i32";
     llvm::Type* type = getLLVMType(typeName);
     
@@ -613,7 +652,6 @@ void CodeGenerator::visit(FuncDecl* node) {
         }
         
         if (llvm::verifyFunction(*func, &llvm::errs())) {
-            std::cerr << "\nFunction verification failed: " << node->getName() << "\n";
             error("Function verification failed: " + node->getName());
             func->eraseFromParent();
         }
@@ -623,14 +661,8 @@ void CodeGenerator::visit(FuncDecl* node) {
 }
 
 void CodeGenerator::visit(Program* node) {
-    for (size_t i = 0; i < node->getDecls().size(); i++) {
-        const auto& decl = node->getDecls()[i];
-        try {
-            decl->accept(*this);
-        } catch (const std::exception& e) {
-            std::cerr << "Error processing declaration " << i << ": " << e.what() << "\n";
-            error(String("Declaration processing failed: ") + e.what());
-        }
+    for (const auto& decl : node->getDecls()) {
+        decl->accept(*this);
     }
 }
 

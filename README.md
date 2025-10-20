@@ -1,15 +1,14 @@
 # Xypher Programming Language
 
-A compiled language featuring type safety and manual memory control. Built on LLVM for native performance.
+A simple compiled language built on LLVM.
 
 ## Features
 
-- Type-safe with explicit ownership (`own` keyword)
-- LLVM-powered native compilation
-- Cross-platform (Windows, Linux, macOS)
-- Unique syntax with `say()`, `trace()`, `loopwhile()`
-- Optimization levels O0-O3
-- Standard library with 25+ functions (I/O, math, arrays, files)
+- Type-safe with explicit ownership
+- Cross-platform compilation
+- Unique syntax: `say()`, `trace()`, `loopwhile()`
+- Optimization support
+- Standard library for I/O, math, arrays, files
 
 ## Quick Example
 
@@ -190,9 +189,9 @@ Advanced:
 
 ## Roadmap
 
-**v1.0** (Current): Compiler, LLVM backend, stdlib (49 functions), JIT foundation  
-**v1.1** (Next): Full modules, structs, enums, pattern matching syntax  
-**v2.0** (Future): Async/await, generics, LSP, package manager
+**v1.0** (Current): Basic compiler and standard library  
+**v1.1** (Next): Modules, structs, enums, pattern matching  
+**v2.0** (Future): Async/await, generics, package manager
 
 ## Contributing
 

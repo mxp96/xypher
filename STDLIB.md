@@ -1,6 +1,6 @@
 # Xypher Standard Library
 
-Runtime library providing core functionality for Xypher programs.
+Core runtime library for Xypher programs.
 
 ## Library Files
 
@@ -38,10 +38,8 @@ Utils: `xy_abs_i32`, `xy_abs_f64`
 ### File I/O (5 functions)
 `xy_file_open`, `xy_file_close`, `xy_file_read`, `xy_file_write`, `xy_file_read_all`
 
-### Runtime (4 functions)
+### Runtime
 `xy_runtime_init`, `xy_runtime_cleanup`, `xy_panic`, `xy_assert`
-
-**Total: 49 functions**
 
 ## Usage from Xypher
 

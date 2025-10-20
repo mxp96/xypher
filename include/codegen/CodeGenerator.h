@@ -60,6 +60,7 @@ private:
     Unique<llvm::IRBuilder<>> builder_;
     
     Map<String, llvm::AllocaInst*> namedValues_;
+    Map<String, llvm::GlobalVariable*> globalValues_;
     Map<String, llvm::Function*> functions_;
     
     llvm::Value* currentValue_ = nullptr;
