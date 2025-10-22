@@ -60,6 +60,8 @@ bool LLVMBackend::emitObject(llvm::Module* module, const String& filename) {
         return false;
     }
     
+    module->setDataLayout(targetMachine->createDataLayout());
+    
     std::error_code ec;
     llvm::raw_fd_ostream dest(filename, ec, llvm::sys::fs::OF_None);
     

@@ -12,6 +12,7 @@ set(XYSTD_SOURCES
     src/math.c
     src/array.c
     src/file.c
+    src/time.c
     src/runtime.c
 )
 

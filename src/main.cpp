@@ -48,21 +48,23 @@ void printHelp() {
     std::cout << "Xypher Compiler (xypc) v" << XYPHER_VERSION_STRING << "\n\n";
     std::cout << "Usage: xypc [options] <input.xyp>\n\n";
     std::cout << "Options:\n";
-    std::cout << "  -o <file>          Specify output file name\n";
-    std::cout << "  --emit-llvm        Emit LLVM IR instead of binary\n";
-    std::cout << "  --emit-asm         Emit assembly code\n";
-    std::cout << "  --check-syntax     Check syntax only, don't compile\n";
-    std::cout << "  --ast-dump         Dump AST and exit\n";
-    std::cout << "  --debug            Enable debug mode\n";
-    std::cout << "  -O<level>          Optimization level (0-3)\n";
-    std::cout << "  -h, --help         Show this help message\n";
-    std::cout << "  -v, --version      Show version information\n";
+    std::cout << "  -o <file>          Output file name\n";
+    std::cout << "  --emit-llvm        Emit LLVM IR\n";
+    std::cout << "  --emit-asm         Emit assembly\n";
+    std::cout << "  --check-syntax     Syntax check only\n";
+    std::cout << "  --ast-dump         Dump AST\n";
+    std::cout << "  --debug            Debug mode\n";
+    std::cout << "  -O<0-3>            Optimization level\n";
+    std::cout << "  -Os                Optimize for size\n";
+    std::cout << "  -Oz                Aggressive size optimization\n";
+    std::cout << "  --size             Maximum size reduction\n";
+    std::cout << "  -h, --help         Show help\n";
+    std::cout << "  -v, --version      Show version\n";
     std::cout << "\n";
     std::cout << "Examples:\n";
     std::cout << "  xypc main.xyp -o main\n";
-    std::cout << "  xypc --emit-llvm program.xyp\n";
-    std::cout << "  xypc --ast-dump test.xyp\n";
-    std::cout << "  xypc -O2 main.xyp -o optimized\n";
+    std::cout << "  xypc program.xyp -Os -o small\n";
+    std::cout << "  xypc program.xyp --size -o tiny\n";
 }
 
 void printVersion() {
@@ -94,8 +96,16 @@ CompilerOptions parseArguments(int argc, char* argv[]) {
             opts.dumpAST = true;
         } else if (arg == "--debug") {
             opts.debugMode = true;
-        } else if (arg.substr(0, 2) == "-O" && arg.length() == 3) {
-            opts.optLevel = arg[2] - '0';
+        } else if (arg == "--size") {
+            opts.optLevel = 5; // Force maximum size optimization
+        } else if (arg.substr(0, 2) == "-O") {
+            if (arg == "-Os") {
+                opts.optLevel = 4; // Focus on smaller binaries
+            } else if (arg == "-Oz") {
+                opts.optLevel = 5; // Maximum size reduction
+            } else if (arg.length() == 3) {
+                opts.optLevel = arg[2] - '0';
+            }
         } else if (arg[0] != '-') {
             opts.inputFile = arg;
         }
@@ -189,28 +199,51 @@ fs::path findStdLibPath() {
     return exeDir;
 }
 
-bool linkExecutable(const String& objFile, const String& exeFile) {
-    // Auto-detect xystd library path based on compiler location
-    fs::path stdLibPath = findStdLibPath();
+String getCompileFlags(int optLevel) {
+    String compileFlags;
     
-#ifdef _WIN32
-    String libName = "xystd.dll";
-    String libPath = (stdLibPath / "xystd.lib").string();
-    String dllPath = (stdLibPath / libName).string();
-    
-    // Check if library exists
-    if (!fs::exists(dllPath)) {
-        std::cerr << "Warning: Xypher standard library not found\n";
-        std::cerr << "  Expected: " << dllPath << "\n";
-        std::cerr << "  Compiler will use built-in printf instead\n";
-        // Fallback: link without xystd
-        String command = "clang " + objFile + " -o " + exeFile + ".exe";
-        int result = system(command.c_str());
-        return result == 0;
+    if (optLevel >= 2 || optLevel == 4 || optLevel == 5) {
+#if defined(_WIN32)
+        compileFlags = "-O2 -ffunction-sections -fdata-sections";
+#else
+        compileFlags = "-O2 -ffunction-sections -fdata-sections";
+#endif
+    } else if (optLevel == 1) {
+        compileFlags = "-O1";
     }
     
-    // Windows: Link with import library
-    String command = "clang " + objFile + " -L\"" + stdLibPath.string() + "\" -lxystd -o " + exeFile + ".exe";
+    return compileFlags;
+}
+
+String getLinkFlags(int optLevel) {
+    String linkFlags;
+    
+    if (optLevel >= 2 || optLevel == 4 || optLevel == 5) {
+#if defined(_WIN32)
+        linkFlags = "-Wl,/OPT:REF -Wl,/OPT:ICF";
+#else
+        linkFlags = "-Wl,--gc-sections -s";
+#endif
+    }
+    
+    return linkFlags;
+}
+
+bool linkExecutable(const String& objFile, const String& exeFile, int optLevel) {
+    fs::path stdLibPath = findStdLibPath();
+    
+    String compileFlags = getCompileFlags(optLevel);
+    String linkFlags = getLinkFlags(optLevel);
+    
+#ifdef _WIN32
+    String dllPath = (stdLibPath / "xystd.dll").string();
+    
+    if (!fs::exists(dllPath)) {
+        String command = "clang " + compileFlags + " " + objFile + " " + linkFlags + " -o " + exeFile + ".exe";
+        return system(command.c_str()) == 0;
+    }
+    
+    String command = "clang " + compileFlags + " " + objFile + " -L\"" + stdLibPath.string() + "\" -lxystd " + linkFlags + " -o " + exeFile + ".exe";
 #else
     #ifdef __APPLE__
         String libName = "libxystd.dylib";
@@ -221,21 +254,14 @@ bool linkExecutable(const String& objFile, const String& exeFile) {
     String libPath = (stdLibPath / libName).string();
     
     if (!fs::exists(libPath)) {
-        std::cerr << "Warning: Xypher standard library not found\n";
-        std::cerr << "  Expected: " << libPath << "\n";
-        std::cerr << "  Compiler will use built-in printf instead\n";
-        // Fallback: link without xystd
-        String command = "clang " + objFile + " -o " + exeFile;
-        int result = system(command.c_str());
-        return result == 0;
+        String command = "clang " + compileFlags + " " + objFile + " " + linkFlags + " -o " + exeFile;
+        return system(command.c_str()) == 0;
     }
     
-    // Unix: Link with rpath for runtime loading
-    String command = "clang " + objFile + " -L\"" + stdLibPath.string() + "\" -lxystd -Wl,-rpath,\"" + stdLibPath.string() + "\" -o " + exeFile;
+    String command = "clang " + compileFlags + " " + objFile + " -L\"" + stdLibPath.string() + "\" -lxystd -Wl,-rpath,\"" + stdLibPath.string() + "\" " + linkFlags + " -o " + exeFile;
 #endif
     
-    int result = system(command.c_str());
-    return result == 0;
+    return system(command.c_str()) == 0;
 }
 
 int main(int argc, char* argv[]) {
@@ -295,12 +321,20 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
+    // Run LLVM IR optimization passes
     if (opts.optLevel > 0) {
         OptimizationLevel level = static_cast<OptimizationLevel>(opts.optLevel);
         Optimizer::optimize(codegen.getModule(), level);
     }
     
-    std::cout << "Compiling...\n";
+    if (opts.optLevel > 0) {
+        String optStr = "O" + std::to_string(opts.optLevel);
+        if (opts.optLevel == 4) optStr = "Os";
+        if (opts.optLevel == 5) optStr = "Oz";
+        std::cout << "Compiling (" << optStr << ")...\n";
+    } else {
+        std::cout << "Compiling...\n";
+    }
     
     if (!createDirectoryIfNeeded(opts.outputFile)) {
         return 1;
@@ -324,7 +358,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
-    if (!linkExecutable(objFile, opts.outputFile)) {
+    if (!linkExecutable(objFile, opts.outputFile, opts.optLevel)) {
         std::cerr << "Linking failed\n";
         return 1;
     }

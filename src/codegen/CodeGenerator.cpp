@@ -92,6 +92,36 @@ void CodeGenerator::declarePrintf() {
 
 void CodeGenerator::declareBuiltins() {
     declarePrintf();
+    
+    // Time functions
+    auto i64Type = llvm::Type::getInt64Ty(*context_);
+    auto voidType = llvm::Type::getVoidTy(*context_);
+    auto i32Type = llvm::Type::getInt32Ty(*context_);
+    
+    llvm::Function::Create(
+        llvm::FunctionType::get(i64Type, false),
+        llvm::Function::ExternalLinkage, "xy_time_ns", module_.get()
+    );
+    
+    llvm::Function::Create(
+        llvm::FunctionType::get(i64Type, false),
+        llvm::Function::ExternalLinkage, "xy_time_us", module_.get()
+    );
+    
+    llvm::Function::Create(
+        llvm::FunctionType::get(i64Type, false),
+        llvm::Function::ExternalLinkage, "xy_time_ms", module_.get()
+    );
+    
+    llvm::Function::Create(
+        llvm::FunctionType::get(i64Type, false),
+        llvm::Function::ExternalLinkage, "xy_time_s", module_.get()
+    );
+    
+    llvm::Function::Create(
+        llvm::FunctionType::get(voidType, {i32Type}, false),
+        llvm::Function::ExternalLinkage, "xy_sleep_ms", module_.get()
+    );
 }
 
 void CodeGenerator::error(const String& message) {
@@ -125,6 +155,7 @@ void CodeGenerator::visit(BoolLiteral* node) {
 }
 
 void CodeGenerator::visit(Identifier* node) {
+    // Look for local variables first (function scope)
     auto localIt = namedValues_.find(node->getName());
     if (localIt != namedValues_.end()) {
         currentValue_ = builder_->CreateLoad(
@@ -135,6 +166,7 @@ void CodeGenerator::visit(Identifier* node) {
         return;
     }
     
+    // Then check for global constants
     auto globalIt = globalValues_.find(node->getName());
     if (globalIt != globalValues_.end()) {
         currentValue_ = builder_->CreateLoad(

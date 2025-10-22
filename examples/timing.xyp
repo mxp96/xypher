@@ -1,0 +1,93 @@
+func fibonacci(n: i32) -> i32 {
+    if (n <= 1) {
+        return n;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+func factorial(n: i32) -> i32 {
+    if (n <= 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+func isPrime(n: i32) -> bool {
+    if (n < 2) {
+        return false;
+    }
+    
+    let i: i32 = 2;
+    loopwhile (i * i <= n) {
+        if (n % i == 0) {
+            return false;
+        }
+        i = i + 1;
+    }
+    
+    return true;
+}
+
+func countPrimes(limit: i32) -> i32 {
+    let count: i32 = 0;
+    let i: i32 = 2;
+    
+    loopwhile (i <= limit) {
+        if (isPrime(i)) {
+            count = count + 1;
+        }
+        i = i + 1;
+    }
+    
+    return count;
+}
+
+func main() -> i32 {
+    say("Xypher Performance Benchmark with Timing");
+    say("==========================================\n");
+    
+    say("Note: Run with different optimization levels:");
+    say("  xypc timing.xyp -o timing-none");
+    say("  xypc timing.xyp -O2 -o timing-O2");
+    say("  xypc timing.xyp -Os -o timing-Os");
+    say("  xypc timing.xyp --size -o timing-tiny\n");
+    
+    say("=== Fibonacci Benchmark ===");
+    say("Computing fibonacci(25)...");
+    let fib25: i32 = fibonacci(25);
+    say("Result:", fib25);
+    
+    say("\n=== Factorial Benchmark ===");
+    say("Computing factorial(12)...");
+    let fact12: i32 = factorial(12);
+    say("Result:", fact12);
+    
+    say("\n=== Prime Counting Benchmark ===");
+    say("Counting primes up to 10000...");
+    let primeCount: i32 = countPrimes(10000);
+    say("Primes found:", primeCount);
+    
+    say("\n=== Heavy Computation ===");
+    say("Running nested loops...");
+    let result: i32 = 0;
+    let i: i32 = 0;
+    
+    loopwhile (i < 100) {
+        let j: i32 = 0;
+        loopwhile (j < 100) {
+            result = result + (i * j);
+            j = j + 1;
+        }
+        i = i + 1;
+    }
+    
+    say("Result:", result);
+    
+    say("\n=== Benchmark Complete ===");
+    say("Compare execution times using:");
+    say("  PowerShell: Measure-Command { .\\program.exe }");
+    say("  Linux: time ./program");
+    
+    return 0;
+}
+

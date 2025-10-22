@@ -36,51 +36,6 @@ include_directories(${LLVM_INCLUDE_DIRS})
 separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 
-# DIA SDK support for Windows debugging symbols (following LLVM pattern)
-option(LLVM_ENABLE_DIA_SDK "Use MSVC DIA SDK for debugging." ON)
-
-if(MSVC AND LLVM_ENABLE_DIA_SDK)
-    # Try to find MSVC_DIA_SDK_DIR
-    if(NOT DEFINED MSVC_DIA_SDK_DIR)
-        # Check environment variable first
-        if(DEFINED ENV{MSVC_DIA_SDK_DIR})
-            set(MSVC_DIA_SDK_DIR $ENV{MSVC_DIA_SDK_DIR})
-        else()
-            # Use VS installer to detect installation path
-            if(DEFINED ENV{VSINSTALLDIR})
-                set(MSVC_DIA_SDK_DIR "$ENV{VSINSTALLDIR}DIA SDK")
-            elseif(DEFINED ENV{VCToolsInstallDir})
-                get_filename_component(VS_ROOT "$ENV{VCToolsInstallDir}/../.." ABSOLUTE)
-                set(MSVC_DIA_SDK_DIR "${VS_ROOT}/DIA SDK")
-            endif()
-        endif()
-    endif()
-    
-    if(MSVC_DIA_SDK_DIR AND EXISTS "${MSVC_DIA_SDK_DIR}")
-        include_directories(SYSTEM ${MSVC_DIA_SDK_DIR}/include)
-        
-        # Set library folder based on architecture (following LLVM pattern)
-        set(LIBPDB_LINK_FOLDERS "${MSVC_DIA_SDK_DIR}/lib")
-        
-        if("$ENV{VSCMD_ARG_TGT_ARCH}" STREQUAL "arm64")
-            set(LIBPDB_LINK_FOLDERS "${LIBPDB_LINK_FOLDERS}/arm64")
-        elseif("$ENV{VSCMD_ARG_TGT_ARCH}" STREQUAL "arm")
-            set(LIBPDB_LINK_FOLDERS "${LIBPDB_LINK_FOLDERS}/arm")
-        elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
-            set(LIBPDB_LINK_FOLDERS "${LIBPDB_LINK_FOLDERS}/amd64")
-        endif()
-        
-        link_directories(${LIBPDB_LINK_FOLDERS})
-        
-        message(STATUS "Found DIA SDK at: ${MSVC_DIA_SDK_DIR}")
-        message(STATUS "  Include: ${MSVC_DIA_SDK_DIR}/include")
-        message(STATUS "  Library: ${LIBPDB_LINK_FOLDERS}")
-    else()
-        message(WARNING "DIA SDK not found. Pass -DMSVC_DIA_SDK_DIR=<path> to cmake, or set LLVM_ENABLE_DIA_SDK=OFF")
-        set(LLVM_ENABLE_DIA_SDK OFF)
-    endif()
-endif()
-
 llvm_map_components_to_libnames(llvm_libs
     support core irreader executionengine
     interpreter mc mcjit bitwriter
@@ -121,6 +76,7 @@ set(SEMA_SOURCES
 set(CODEGEN_SOURCES
     src/codegen/CodeGenerator.cpp
     src/codegen/LLVMBackend.cpp
+    src/codegen/FFI.cpp
 )
 
 set(FRONTEND_SOURCES

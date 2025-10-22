@@ -91,6 +91,20 @@ XYSTD_API char* xy_file_read_all(const char* filename);
 XYSTD_API void xy_runtime_init(void);
 XYSTD_API void xy_runtime_cleanup(void);
 
+// Time functions
+XYSTD_API long long xy_time_ns(void);
+XYSTD_API long long xy_time_us(void);
+XYSTD_API long long xy_time_ms(void);
+XYSTD_API long long xy_time_s(void);
+XYSTD_API void xy_sleep_ms(int milliseconds);
+XYSTD_API void xy_sleep_s(int seconds);
+
+// Time helpers
+XYSTD_API long long xy_time_diff_ms(long long start, long long end);
+XYSTD_API double xy_time_to_s(long long ms);
+XYSTD_API double xy_time_to_min(long long ms);
+XYSTD_API double xy_time_to_h(long long ms);
+
 // Error handling
 XYSTD_API void xy_panic(const char* message);
 XYSTD_API void xy_assert(int condition, const char* message);
