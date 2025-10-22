@@ -50,12 +50,10 @@ void printHelp() {
     std::cout << "Options:\n";
     std::cout << "  -o <file>          Output file name\n";
     std::cout << "  --emit-llvm        Emit LLVM IR\n";
-    std::cout << "  --emit-asm         Emit assembly\n";
     std::cout << "  --check-syntax     Syntax check only\n";
     std::cout << "  --ast-dump         Dump AST\n";
-    std::cout << "  --debug            Debug mode\n";
-    std::cout << "  -O<0-3>            Optimization level\n";
-    std::cout << "  -Os                Optimize for size\n";
+    std::cout << "  -O<0-3>            Optimization level (with LTO)\n";
+    std::cout << "  -Os                Optimize for size (with LTO)\n";
     std::cout << "  -Oz                Aggressive size optimization\n";
     std::cout << "  --size             Maximum size reduction\n";
     std::cout << "  -h, --help         Show help\n";
@@ -63,13 +61,13 @@ void printHelp() {
     std::cout << "\n";
     std::cout << "Examples:\n";
     std::cout << "  xypc main.xyp -o main\n";
+    std::cout << "  xypc program.xyp -O2 -o fast\n";
     std::cout << "  xypc program.xyp -Os -o small\n";
-    std::cout << "  xypc program.xyp --size -o tiny\n";
 }
 
 void printVersion() {
     std::cout << "Xypher Compiler (xypc) v" << XYPHER_VERSION_STRING << "\n";
-    std::cout << "A modern compiled programming language\n";
+    std::cout << "Simple compiled language with LLVM backend\n";
 }
 
 CompilerOptions parseArguments(int argc, char* argv[]) {
@@ -204,12 +202,12 @@ String getCompileFlags(int optLevel) {
     
     if (optLevel >= 2 || optLevel == 4 || optLevel == 5) {
 #if defined(_WIN32)
-        compileFlags = "-O2 -ffunction-sections -fdata-sections";
+        compileFlags = "-O2 -flto -ffunction-sections -fdata-sections";
 #else
-        compileFlags = "-O2 -ffunction-sections -fdata-sections";
+        compileFlags = "-O2 -flto -ffunction-sections -fdata-sections";
 #endif
     } else if (optLevel == 1) {
-        compileFlags = "-O1";
+        compileFlags = "-O1 -flto";
     }
     
     return compileFlags;
@@ -220,9 +218,15 @@ String getLinkFlags(int optLevel) {
     
     if (optLevel >= 2 || optLevel == 4 || optLevel == 5) {
 #if defined(_WIN32)
-        linkFlags = "-Wl,/OPT:REF -Wl,/OPT:ICF";
+        linkFlags = "-flto -Wl,/LTCG -Wl,/OPT:REF -Wl,/OPT:ICF";
 #else
-        linkFlags = "-Wl,--gc-sections -s";
+        linkFlags = "-flto -Wl,--gc-sections -s";
+#endif
+    } else if (optLevel == 1) {
+#if defined(_WIN32)
+        linkFlags = "-flto -Wl,/LTCG";
+#else
+        linkFlags = "-flto";
 #endif
     }
     
