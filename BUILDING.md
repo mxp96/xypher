@@ -4,16 +4,19 @@ Quick build instructions for all platforms.
 
 ## Prerequisites
 
+See [INSTALLATION.md](INSTALLATION.md) for complete installation instructions.
+
+Required:
 - CMake 3.20+
-- LLVM 14+
+- LLVM 14+ (LLVM 21 recommended)
 - C++20 compiler (Clang/GCC/MSVC)
+- Clang for linking
 
 ## Quick Build
 
 ```bash
-.\build.bat        # Windows
 ./build.sh         # Linux/macOS
-./build.bat test   # Build and test
+.\build.bat        # Windows
 ```
 
 Output: `build/bin/`
@@ -22,12 +25,6 @@ Output: `build/bin/`
 
 ### Windows
 
-Install dependencies:
-```bash
-choco install llvm cmake visualstudio2022buildtools
-```
-
-Build:
 ```bash
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
@@ -36,12 +33,6 @@ cmake --build . --config Release
 
 ### Linux
 
-Install dependencies:
-```bash
-sudo apt install llvm-14-dev clang cmake build-essential
-```
-
-Build:
 ```bash
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
@@ -50,13 +41,6 @@ make -j$(nproc)
 
 ### macOS
 
-Install dependencies:
-```bash
-brew install llvm cmake
-export LLVM_DIR=/usr/local/opt/llvm
-```
-
-Build:
 ```bash
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release

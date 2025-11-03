@@ -241,6 +241,8 @@ Ownership transfer on assignment (move semantics).
 
 ## Examples
 
+See [QUICKSTART.md](QUICKSTART.md) for examples and tutorials.
+
 See `examples/` directory for complete programs.
 
 ## Grammar
@@ -258,6 +260,9 @@ expression = assignment | logical | comparison | arithmetic | unary | primary
 
 Full grammar available in parser source code.
 
----
+## See Also
 
-This spec reflects v1.0. Check [README.md](README.md) for latest features.
+- [QUICKSTART.md](QUICKSTART.md) - Getting started guide
+- [BUILDING.md](BUILDING.md) - Build instructions
+- [STDLIB.md](STDLIB.md) - Standard library API
+- [README.md](README.md) - Project overview

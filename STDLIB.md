@@ -81,6 +81,8 @@ When distributing programs, include `xystd.dll/.so/.dylib` in the same folder or
 
 ## Building Only StdLib
 
+See [BUILDING.md](BUILDING.md) for build instructions.
+
 ```bash
 cd build
 cmake --build . --target xystd
@@ -93,3 +95,10 @@ Output: `build/bin/xystd.dll`
 See `std/include/xystd.h` for complete API.
 
 Full documentation in header comments.
+
+## See Also
+
+- [QUICKSTART.md](QUICKSTART.md) - Getting started guide
+- [BUILDING.md](BUILDING.md) - Build instructions
+- [LANGUAGE_SPEC.md](LANGUAGE_SPEC.md) - Language syntax
+- [README.md](README.md) - Project overview

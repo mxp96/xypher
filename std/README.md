@@ -108,17 +108,13 @@ clang program.c -L./bin -lxystd -o program
 
 ## Building
 
+See [../BUILDING.md](../BUILDING.md) for complete build instructions.
+
 Standard library di-build otomatis bersama compiler:
 
 ```bash
-./build.sh release
-```
-
-Atau manual:
-```bash
-cd build
-cmake ..
-cmake --build . --config Release
+./build.sh    # Linux/macOS
+.\build.bat   # Windows
 ```
 
 ## Directory Structure
@@ -149,7 +145,13 @@ std/
 
 1.0.0
 
+## See Also
+
+- [../STDLIB.md](../STDLIB.md) - Complete standard library documentation
+- [../BUILDING.md](../BUILDING.md) - Build instructions
+- [../README.md](../README.md) - Project overview
+
 ## License
 
-Apache 2.0
+GNU Library General Public License v2.0
 

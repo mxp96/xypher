@@ -55,14 +55,6 @@
 
 ## [Unreleased]
 
-### Planned for v1.1
-
-- Module system (`link` directive)
-- Struct and enum types
-- Pattern matching (`match`)
-- Enhanced error messages
-- More stdlib functions
-
 ### Planned for v2.0
 
 - Async/await
@@ -72,6 +64,9 @@
 - LSP support
 - JIT compilation
 
----
+## See Also
 
-See [README.md](README.md) for current features.
+- [INSTALLATION.md](INSTALLATION.md) - Setup dependencies
+- [BUILDING.md](BUILDING.md) - Build instructions
+- [QUICKSTART.md](QUICKSTART.md) - Getting started
+- [README.md](README.md) - Current features

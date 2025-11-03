@@ -51,6 +51,8 @@ docs(readme): update installation steps
 
 ## Testing
 
+See [BUILDING.md](BUILDING.md) for build instructions.
+
 Test your changes:
 ```bash
 cd build
@@ -107,6 +109,13 @@ Be respectful, constructive, and professional.
 
 ## License
 
-By contributing, you agree to Apache 2.0 License.
+By contributing, you agree to GNU Library General Public License v2.0.
+
+## See Also
+
+- [INSTALLATION.md](INSTALLATION.md) - Setup dependencies
+- [BUILDING.md](BUILDING.md) - Build instructions
+- [QUICKSTART.md](QUICKSTART.md) - Getting started
+- [README.md](README.md) - Project overview
 
 Thanks for making Xypher better!

@@ -133,4 +133,9 @@ Copy `xystd.dll` next to your program, or add to PATH/LD_LIBRARY_PATH.
 **Compiler can't find library?**  
 Make sure `xystd.dll` is in same directory as `xypc.exe`.
 
-See [README.md](README.md) for more help.
+## See Also
+
+- [INSTALLATION.md](INSTALLATION.md) - Setup dependencies
+- [BUILDING.md](BUILDING.md) - Build instructions
+- [QUICKSTART.md](QUICKSTART.md) - Getting started
+- [README.md](README.md) - Project overview

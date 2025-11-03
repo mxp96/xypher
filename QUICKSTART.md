@@ -1,28 +1,30 @@
 # Xypher Quick Start
 
-Get started with Xypher.
+Get started with Xypher in minutes.
 
 ## Install
 
-**Windows:**
-```bash
-choco install llvm cmake
-git clone <repo-url> && cd xypher-lang
-.\build.bat
-```
+See [INSTALLATION.md](INSTALLATION.md) for complete instructions.
 
-**Linux:**
-```bash
-sudo apt install llvm-14-dev clang cmake build-essential
-git clone <repo-url> && cd xypher-lang
-./build.sh
-```
+**Quick Install:**
 
-**macOS:**
 ```bash
+# Linux/Ubuntu
+sudo apt install llvm-21-dev clang cmake build-essential zlib1g-dev libzstd-dev
+
+# macOS
 brew install llvm cmake
-git clone <repo-url> && cd xypher-lang
-./build.sh
+
+# Windows
+choco install llvm cmake visualstudio2022buildtools
+```
+
+**Build:**
+
+```bash
+git clone <repo-url>
+cd xypher
+./build.sh    # or .\build.bat on Windows
 ```
 
 ## First Program
