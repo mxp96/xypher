@@ -109,6 +109,19 @@ XYSTD_API double xy_time_to_h(long long ms);
 XYSTD_API void xy_panic(const char* message);
 XYSTD_API void xy_assert(int condition, const char* message);
 
+typedef struct xy_hashmap xy_hashmap;
+
+XYSTD_API xy_hashmap* xy_hashmap_create(unsigned long long capacity);
+XYSTD_API void xy_hashmap_destroy(xy_hashmap* map);
+XYSTD_API int xy_hashmap_insert(xy_hashmap* map, const char* key, void* value);
+XYSTD_API void* xy_hashmap_get(xy_hashmap* map, const char* key);
+XYSTD_API int xy_hashmap_remove(xy_hashmap* map, const char* key);
+XYSTD_API int xy_hashmap_contains(xy_hashmap* map, const char* key);
+XYSTD_API unsigned long long xy_hashmap_size(xy_hashmap* map);
+XYSTD_API void xy_hashmap_clear(xy_hashmap* map);
+XYSTD_API const char** xy_hashmap_keys(xy_hashmap* map, unsigned long long* count);
+XYSTD_API void xy_hashmap_free_keys(const char** keys);
+
 #ifdef __cplusplus
 }
 #endif

@@ -27,6 +27,8 @@ else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+find_package(ZLIB REQUIRED)
+
 # Find LLVM
 find_package(LLVM REQUIRED CONFIG)
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
@@ -111,7 +113,7 @@ add_executable(xypc
     ${RUNTIME_SOURCES}
 )
 
-target_link_libraries(xypc ${llvm_libs})
+target_link_libraries(xypc ${llvm_libs} ZLIB::ZLIB)
 
 # Copy compiler to bin directory after build
 add_custom_command(TARGET xypc POST_BUILD

@@ -41,8 +41,9 @@ bool LLVMBackend::emitAssembly(llvm::Module* module, const String& filename) {
     }
     
     llvm::legacy::PassManager pass;
+
     if (targetMachine->addPassesToEmitFile(pass, dest, nullptr,
-                                          llvm::CodeGenFileType::AssemblyFile)) {
+                                          llvm::CGFT_AssemblyFile)) {
         return false;
     }
     
@@ -71,7 +72,7 @@ bool LLVMBackend::emitObject(llvm::Module* module, const String& filename) {
     
     llvm::legacy::PassManager pass;
     if (targetMachine->addPassesToEmitFile(pass, dest, nullptr,
-                                          llvm::CodeGenFileType::ObjectFile)) {
+                                          llvm::CGFT_ObjectFile)) {
         return false;
     }
     
@@ -82,7 +83,12 @@ bool LLVMBackend::emitObject(llvm::Module* module, const String& filename) {
 }
 
 bool LLVMBackend::optimize(llvm::Module* module, int optLevel) {
+    // Suppress unused parameter warnings
+    (void)module;
+    (void)optLevel;
+    
     // Optimization passes would go here
+    // This is a placeholder - actual optimization is done in Optimizer.cpp
     return true;
 }
 

@@ -144,7 +144,9 @@ void CodeGenerator::visit(FloatLiteral* node) {
 }
 
 void CodeGenerator::visit(StringLiteral* node) {
-    currentValue_ = builder_->CreateGlobalString(node->getValue(), "", 0, module_.get());
+    // Create global string and get pointer to first element (i8*)
+    llvm::Value* globalStr = builder_->CreateGlobalStringPtr(node->getValue(), "", 0, module_.get());
+    currentValue_ = globalStr;
 }
 
 void CodeGenerator::visit(BoolLiteral* node) {
@@ -568,26 +570,26 @@ void CodeGenerator::visit(SayStmt* node) {
         
         // Add space before each arg except the first
         if (i > 0) {
-            llvm::Value* spaceStr = builder_->CreateGlobalString(" ", "", 0, module_.get());
+            llvm::Value* spaceStr = builder_->CreateGlobalStringPtr(" ", "", 0, module_.get());
             std::vector<llvm::Value*> spaceArgs = {spaceStr};
             builder_->CreateCall(printfFunc, spaceArgs);
         }
         
         // Print the value without newline
         if (currentValue_->getType()->isIntegerTy()) {
-            llvm::Value* formatStr = builder_->CreateGlobalString("%d", "", 0, module_.get());
+            llvm::Value* formatStr = builder_->CreateGlobalStringPtr("%d", "", 0, module_.get());
             args.push_back(formatStr);
             args.push_back(currentValue_);
         } else if (currentValue_->getType()->isFloatingPointTy()) {
-            llvm::Value* formatStr = builder_->CreateGlobalString("%f", "", 0, module_.get());
+            llvm::Value* formatStr = builder_->CreateGlobalStringPtr("%f", "", 0, module_.get());
             args.push_back(formatStr);
             args.push_back(currentValue_);
         } else if (currentValue_->getType()->isPointerTy()) {
-            llvm::Value* formatStr = builder_->CreateGlobalString("%s", "", 0, module_.get());
+            llvm::Value* formatStr = builder_->CreateGlobalStringPtr("%s", "", 0, module_.get());
             args.push_back(formatStr);
             args.push_back(currentValue_);
         } else {
-            llvm::Value* formatStr = builder_->CreateGlobalString("<value>", "", 0, module_.get());
+            llvm::Value* formatStr = builder_->CreateGlobalStringPtr("<value>", "", 0, module_.get());
             args.push_back(formatStr);
         }
         
@@ -595,7 +597,7 @@ void CodeGenerator::visit(SayStmt* node) {
     }
     
     // Print newline at the end
-    llvm::Value* newlineStr = builder_->CreateGlobalString("\n", "", 0, module_.get());
+    llvm::Value* newlineStr = builder_->CreateGlobalStringPtr("\n", "", 0, module_.get());
     std::vector<llvm::Value*> newlineArgs = {newlineStr};
     builder_->CreateCall(printfFunc, newlineArgs);
 }
@@ -610,7 +612,7 @@ void CodeGenerator::visit(TraceStmt* node) {
     if (!printfFunc) return;
     
     std::vector<llvm::Value*> args;
-    llvm::Value* formatStr = builder_->CreateGlobalString("[TRACE] %d\n", "", 0, module_.get());
+    llvm::Value* formatStr = builder_->CreateGlobalStringPtr("[TRACE] %d\n", "", 0, module_.get());
     args.push_back(formatStr);
     
     if (currentValue_->getType()->isIntegerTy()) {

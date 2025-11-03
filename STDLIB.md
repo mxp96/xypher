@@ -35,6 +35,11 @@ Utils: `xy_abs_i32`, `xy_abs_f64`
 `xy_array_fill_i32`, `xy_array_copy_i32`, `xy_array_sum_i32`  
 `xy_array_min_i32`, `xy_array_max_i32`
 
+### Hashmap (10 functions)
+`xy_hashmap_create`, `xy_hashmap_destroy`, `xy_hashmap_insert`, `xy_hashmap_get`  
+`xy_hashmap_remove`, `xy_hashmap_contains`, `xy_hashmap_size`, `xy_hashmap_clear`  
+`xy_hashmap_keys`, `xy_hashmap_free_keys`
+
 ### File I/O (5 functions)
 `xy_file_open`, `xy_file_close`, `xy_file_read`, `xy_file_write`, `xy_file_read_all`
 

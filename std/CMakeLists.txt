@@ -14,6 +14,7 @@ set(XYSTD_SOURCES
     src/file.c
     src/time.c
     src/runtime.c
+    src/hashmap.c
 )
 
 # Build shared library
@@ -21,8 +22,6 @@ add_library(xystd SHARED ${XYSTD_SOURCES})
 
 # Set library properties
 set_target_properties(xystd PROPERTIES
-    VERSION 1.0.0
-    SOVERSION 1
     PUBLIC_HEADER include/xystd.h
 )
 
@@ -52,7 +51,6 @@ install(TARGETS xystd
 add_custom_command(TARGET xystd POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:xystd> ${CMAKE_BINARY_DIR}/bin/
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_LINKER_FILE:xystd> ${CMAKE_BINARY_DIR}/bin/
     COMMENT "Copying xystd library to bin directory"
 )
 

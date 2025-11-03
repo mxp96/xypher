@@ -39,7 +39,8 @@ void* JITEngine::lookup(const String& name) {
         return nullptr;
     }
     
-    return symbol->toPtr<void*>();
+
+    return reinterpret_cast<void*>(symbol->getAddress());
 }
 
 }

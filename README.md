@@ -8,7 +8,7 @@ A simple compiled language built on LLVM.
 - Cross-platform compilation
 - Unique syntax: `say()`, `trace()`, `loopwhile()`
 - Optimization support
-- Standard library for I/O, math, arrays, files
+- Standard library for I/O, math, arrays, files, hashmap
 
 ## Quick Example
 

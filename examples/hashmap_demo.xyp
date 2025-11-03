@@ -1,0 +1,42 @@
+func main() -> i32 {
+    say("Hashmap Demo - Key-Value Storage");
+    say("==================================");
+    
+    say("\nHashmap implementation available in xystd library");
+    say("Features:");
+    say("- Dynamic resizing with load factor 0.75");
+    say("- Collision handling via chaining");
+    say("- DJB2 hash algorithm");
+    say("- O(1) average insert/get/remove");
+    
+    say("\nAPI Functions:");
+    say("- xy_hashmap_create(capacity)");
+    say("- xy_hashmap_destroy(map)");
+    say("- xy_hashmap_insert(map, key, value)");
+    say("- xy_hashmap_get(map, key)");
+    say("- xy_hashmap_remove(map, key)");
+    say("- xy_hashmap_contains(map, key)");
+    say("- xy_hashmap_size(map)");
+    say("- xy_hashmap_clear(map)");
+    say("- xy_hashmap_keys(map, count)");
+    
+    say("\nUse Cases:");
+    say("- Symbol tables in compilers");
+    say("- Configuration management");
+    say("- Caching systems");
+    say("- Database indexing");
+    say("- String interning");
+    
+    say("\nPerformance:");
+    say("- Average case: O(1) for all operations");
+    say("- Worst case: O(n) with many collisions");
+    say("- Space complexity: O(n)");
+    
+    say("\nMemory Safety:");
+    say("- Automatic key duplication");
+    say("- Proper cleanup on destroy");
+    say("- NULL safety checks");
+    
+    return 0;
+}
+
