@@ -28,6 +28,7 @@ else()
 endif()
 
 find_package(ZLIB REQUIRED)
+find_package(zstd)
 
 # Find LLVM
 find_package(LLVM REQUIRED CONFIG)
@@ -115,7 +116,12 @@ add_executable(xypc
 
 target_link_libraries(xypc ${llvm_libs} ZLIB::ZLIB)
 
-# Copy compiler to bin directory after build
+if(TARGET zstd::libzstd_shared)
+    target_link_libraries(xypc zstd::libzstd_shared)
+elseif(TARGET zstd::libzstd_static)
+    target_link_libraries(xypc zstd::libzstd_static)
+endif()
+
 add_custom_command(TARGET xypc POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:xypc> ${CMAKE_BINARY_DIR}/bin/

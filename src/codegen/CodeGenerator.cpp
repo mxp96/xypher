@@ -58,7 +58,7 @@ llvm::Type* CodeGenerator::getLLVMType(const String& typeName) {
     if (typeName == "f64") return llvm::Type::getDoubleTy(*context_);
     if (typeName == "bool") return llvm::Type::getInt1Ty(*context_);
     if (typeName == "char") return llvm::Type::getInt8Ty(*context_);
-    if (typeName == "str") return llvm::PointerType::get(llvm::Type::getInt8Ty(*context_), 0);
+    if (typeName == "str") return llvm::PointerType::get(*context_, 0);
     if (typeName == "void") return llvm::Type::getVoidTy(*context_);
     
     return llvm::Type::getInt32Ty(*context_);
@@ -74,7 +74,7 @@ llvm::AllocaInst* CodeGenerator::createEntryBlockAlloca(
 
 void CodeGenerator::declarePrintf() {
     std::vector<llvm::Type*> printfArgs;
-    printfArgs.push_back(llvm::PointerType::get(llvm::Type::getInt8Ty(*context_), 0));
+    printfArgs.push_back(llvm::PointerType::get(*context_, 0));
     
     llvm::FunctionType* printfType = llvm::FunctionType::get(
         llvm::Type::getInt32Ty(*context_),

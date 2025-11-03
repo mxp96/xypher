@@ -10,7 +10,7 @@ llvm::Type* FFIManager::getTypeFromString(const String& typeName) {
     if (typeName == "i32") return llvm::Type::getInt32Ty(*context_);
     if (typeName == "i64") return llvm::Type::getInt64Ty(*context_);
     if (typeName == "f64") return llvm::Type::getDoubleTy(*context_);
-    if (typeName == "str") return llvm::PointerType::get(llvm::Type::getInt8Ty(*context_), 0);
+    if (typeName == "str") return llvm::PointerType::get(*context_, 0);
     if (typeName == "void") return llvm::Type::getVoidTy(*context_);
     return llvm::Type::getInt32Ty(*context_);
 }
@@ -70,7 +70,7 @@ void FFIManager::declareStandardLibrary() {
     
     // Printf (legacy)
     std::vector<llvm::Type*> printfArgs;
-    printfArgs.push_back(llvm::PointerType::get(llvm::Type::getInt8Ty(*context_), 0));
+    printfArgs.push_back(llvm::PointerType::get(*context_, 0));
     
     llvm::FunctionType* printfType = llvm::FunctionType::get(
         llvm::Type::getInt32Ty(*context_),

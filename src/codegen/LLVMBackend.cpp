@@ -6,6 +6,7 @@
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/IR/LegacyPassManager.h>
 #include <llvm/Support/TargetSelect.h>
+#include <llvm/MC/TargetRegistry.h>
 
 #include <system_error>
 
@@ -43,7 +44,7 @@ bool LLVMBackend::emitAssembly(llvm::Module* module, const String& filename) {
     llvm::legacy::PassManager pass;
 
     if (targetMachine->addPassesToEmitFile(pass, dest, nullptr,
-                                          llvm::CGFT_AssemblyFile)) {
+                                          llvm::CodeGenFileType::AssemblyFile)) {
         return false;
     }
     
@@ -72,7 +73,7 @@ bool LLVMBackend::emitObject(llvm::Module* module, const String& filename) {
     
     llvm::legacy::PassManager pass;
     if (targetMachine->addPassesToEmitFile(pass, dest, nullptr,
-                                          llvm::CGFT_ObjectFile)) {
+                                          llvm::CodeGenFileType::ObjectFile)) {
         return false;
     }
     
