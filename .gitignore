@@ -11,16 +11,10 @@ bin/
 *.dylib
 *.ll
 *.bc
-
-.vscode/
-.idea/
-.DS_Store
-
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 compile_commands.json
-
 *.tar.gz
 *.zip
 
