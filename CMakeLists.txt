@@ -114,6 +114,8 @@ add_executable(xypc
     ${RUNTIME_SOURCES}
 )
 
+set(llvm_libs LLVM)
+
 target_link_libraries(xypc ${llvm_libs} ZLIB::ZLIB)
 
 if(TARGET zstd::libzstd_shared)

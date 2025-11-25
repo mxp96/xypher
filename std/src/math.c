@@ -1,5 +1,7 @@
 #include "../include/xystd.h"
+
 #include <math.h>
+#include <stdlib.h>
 
 double xy_sqrt(double x) {
     return sqrt(x);
@@ -56,4 +58,3 @@ double xy_min_f64(double a, double b) {
 double xy_max_f64(double a, double b) {
     return a > b ? a : b;
 }
-
