@@ -20,13 +20,14 @@ class IfStmt;
 class LoopwhileStmt;
 class SayStmt;
 class TraceStmt;
+class ImportDecl;
 class FuncDecl;
 class Program;
 
 class ASTVisitor {
-public:
+  public:
     virtual ~ASTVisitor() = default;
-    
+
     virtual void visit(IntegerLiteral* node) = 0;
     virtual void visit(FloatLiteral* node) = 0;
     virtual void visit(StringLiteral* node) = 0;
@@ -35,19 +36,20 @@ public:
     virtual void visit(BinaryExpr* node) = 0;
     virtual void visit(UnaryExpr* node) = 0;
     virtual void visit(CallExpr* node) = 0;
-    
+
     virtual void visit(TypeName* node) = 0;
-    
+
     virtual void visit(ExprStmt* node) = 0;
     virtual void visit(VarDecl* node) = 0;
     virtual void visit(BlockStmt* node) = 0;
     virtual void visit(ReturnStmt* node) = 0;
     virtual void visit(IfStmt* node) = 0;
     virtual void visit(LoopwhileStmt* node) = 0;
-    
+
     virtual void visit(SayStmt* node) = 0;
     virtual void visit(TraceStmt* node) = 0;
-    
+
+    virtual void visit(ImportDecl* node) = 0;
     virtual void visit(FuncDecl* node) = 0;
     virtual void visit(Program* node) = 0;
 };
@@ -55,4 +57,3 @@ public:
 } // namespace xypher
 
 #endif
-

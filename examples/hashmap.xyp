@@ -1,0 +1,168 @@
+func demonstrateHashmapUsage() -> void {
+    say("=== Hashmap Implementation in xystd ===");
+    say("");
+    say("Hashmap is fully implemented in C (xystd library)");
+    say("with 10 core functions for key-value storage.");
+    say("");
+    
+    say("1. CREATE HASHMAP");
+    say("   Purpose: Initialize new hashmap with capacity");
+    say("   Example: let map = xy_hashmap_create(16);");
+    say("   Returns: Pointer to hashmap structure");
+    say("");
+    
+    say("2. INSERT KEY-VALUE");
+    say("   Purpose: Store value with string key");
+    say("   Example: xy_hashmap_insert(map, \"username\", \"Alice\");");
+    say("   Returns: 1 on success, 0 on failure");
+    say("");
+    
+    say("3. GET VALUE");
+    say("   Purpose: Retrieve value by key");
+    say("   Example: let value = xy_hashmap_get(map, \"username\");");
+    say("   Returns: Pointer to value or NULL if not found");
+    say("");
+    
+    say("4. CHECK EXISTENCE");
+    say("   Purpose: Test if key exists");
+    say("   Example: if xy_hashmap_contains(map, \"username\") {...}");
+    say("   Returns: 1 if exists, 0 if not");
+    say("");
+    
+    say("5. REMOVE KEY");
+    say("   Purpose: Delete key-value pair");
+    say("   Example: xy_hashmap_remove(map, \"username\");");
+    say("   Returns: 1 if removed, 0 if key not found");
+    say("");
+    
+    say("6. GET SIZE");
+    say("   Purpose: Count total entries");
+    say("   Example: let count = xy_hashmap_size(map);");
+    say("   Returns: Number of key-value pairs");
+    say("");
+    
+    say("7. CLEAR ALL");
+    say("   Purpose: Remove all entries");
+    say("   Example: xy_hashmap_clear(map);");
+    say("");
+    
+    say("8. GET ALL KEYS");
+    say("   Purpose: Retrieve array of keys");
+    say("   Example: let keys = xy_hashmap_keys(map, &count);");
+    say("   Returns: Array of string pointers");
+    say("");
+    
+    say("9. FREE KEYS");
+    say("   Purpose: Deallocate keys array");
+    say("   Example: xy_hashmap_free_keys(keys);");
+    say("");
+    
+    say("10. DESTROY HASHMAP");
+    say("    Purpose: Free all memory");
+    say("    Example: xy_hashmap_destroy(map);");
+    say("");
+}
+
+func showRealWorldExample() -> void {
+    say("=== Real-World Use Case: User Database ===");
+    say("");
+    say("// C Code Example (fully working with xystd):");
+    say("");
+    say("void user_database_demo() {");
+    say("    // Create hashmap for storing user ages");
+    say("    xy_hashmap* users = xy_hashmap_create(10);");
+    say("    ");
+    say("    // Add users");
+    say("    int* alice_age = malloc(sizeof(int));");
+    say("    *alice_age = 25;");
+    say("    xy_hashmap_insert(users, \"alice\", alice_age);");
+    say("    ");
+    say("    int* bob_age = malloc(sizeof(int));");
+    say("    *bob_age = 30;");
+    say("    xy_hashmap_insert(users, \"bob\", bob_age);");
+    say("    ");
+    say("    // Retrieve user age");
+    say("    int* age = (int*)xy_hashmap_get(users, \"alice\");");
+    say("    if (age) {");
+    say("        printf(\"Alice is %d years old\\\\n\", *age);");
+    say("    }");
+    say("    ");
+    say("    // Check if user exists");
+    say("    if (xy_hashmap_contains(users, \"charlie\")) {");
+    say("        printf(\"Charlie found\\\\n\");");
+    say("    } else {");
+    say("        printf(\"Charlie not found\\\\n\");");
+    say("    }");
+    say("    ");
+    say("    // Get size");
+    say("    printf(\"Total users: %llu\\\\n\", xy_hashmap_size(users));");
+    say("    ");
+    say("    // List all users");
+    say("    unsigned long long key_count;");
+    say("    const char** keys = xy_hashmap_keys(users, &key_count);");
+    say("    for (unsigned long long i = 0; i < key_count; i++) {");
+    say("        int* user_age = (int*)xy_hashmap_get(users, keys[i]);");
+    say("        printf(\"%s: %d\\\\n\", keys[i], *user_age);");
+    say("    }");
+    say("    xy_hashmap_free_keys(keys);");
+    say("    ");
+    say("    // Cleanup");
+    say("    xy_hashmap_destroy(users);");
+    say("}");
+    say("");
+}
+
+func showImplementationDetails() -> void {
+    say("=== Implementation Details ===");
+    say("");
+    say("Algorithm: Separate Chaining");
+    say("  - Uses linked lists for collision resolution");
+    say("  - Each bucket can store multiple entries");
+    say("");
+    say("Hash Function: DJB2");
+    say("  - Fast non-cryptographic hash");
+    say("  - Good distribution for strings");
+    say("  - Formula: hash = hash * 33 + c");
+    say("");
+    say("Dynamic Resizing:");
+    say("  - Load factor threshold: 0.75");
+    say("  - Growth factor: 2x capacity");
+    say("  - Automatic rehashing on resize");
+    say("");
+    say("Memory Management:");
+    say("  - Keys are automatically strdup'd");
+    say("  - User manages value memory");
+    say("  - Full cleanup on destroy");
+    say("");
+    say("Complexity:");
+    say("  - Insert: O(1) average, O(n) worst");
+    say("  - Get:    O(1) average, O(n) worst");
+    say("  - Remove: O(1) average, O(n) worst");
+    say("  - Space:  O(n) for n entries");
+    say("");
+}
+
+func main() -> i32 {
+    say("╔════════════════════════════════════════╗");
+    say("║  Xypher Hashmap - Complete Reference  ║");
+    say("╚════════════════════════════════════════╝");
+    say("");
+    
+    demonstrateHashmapUsage();
+    say("─────────────────────────────────────────");
+    say("");
+    
+    showRealWorldExample();
+    say("─────────────────────────────────────────");
+    say("");
+    
+    showImplementationDetails();
+    
+    say("═════════════════════════════════════════");
+    say("NOTE: Full implementation in std/src/hashmap.c");
+    say("Use from C/C++ directly with xystd library");
+    say("Xypher language integration coming soon!");
+    say("═════════════════════════════════════════");
+    
+    return 0;
+}

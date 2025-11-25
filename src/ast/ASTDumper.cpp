@@ -1,4 +1,5 @@
 #include "ast/ASTDumper.h"
+
 #include "ast/AST.h"
 #include "lexer/Token.h"
 
@@ -67,7 +68,7 @@ void ASTDumper::visit(CallExpr* node) {
     increaseIndent();
     node->getCallee()->accept(*this);
     decreaseIndent();
-    
+
     if (!node->getArgs().empty()) {
         printIndent();
         out_ << "Arguments:\n";
@@ -96,10 +97,12 @@ void ASTDumper::visit(ExprStmt* node) {
 void ASTDumper::visit(VarDecl* node) {
     printIndent();
     out_ << "VarDecl: " << node->getName();
-    if (node->isConst()) out_ << " (const)";
-    if (node->isOwned()) out_ << " (own)";
+    if (node->isConst())
+        out_ << " (const)";
+    if (node->isOwned())
+        out_ << " (own)";
     out_ << "\n";
-    
+
     increaseIndent();
     if (node->getType()) {
         printIndent();
@@ -108,7 +111,7 @@ void ASTDumper::visit(VarDecl* node) {
         node->getType()->accept(*this);
         decreaseIndent();
     }
-    
+
     if (node->getInit()) {
         printIndent();
         out_ << "Initializer:\n";
@@ -143,19 +146,19 @@ void ASTDumper::visit(IfStmt* node) {
     printIndent();
     out_ << "IfStmt\n";
     increaseIndent();
-    
+
     printIndent();
     out_ << "Condition:\n";
     increaseIndent();
     node->getCond()->accept(*this);
     decreaseIndent();
-    
+
     printIndent();
     out_ << "Then:\n";
     increaseIndent();
     node->getThenBranch()->accept(*this);
     decreaseIndent();
-    
+
     if (node->getElseBranch()) {
         printIndent();
         out_ << "Else:\n";
@@ -163,7 +166,7 @@ void ASTDumper::visit(IfStmt* node) {
         node->getElseBranch()->accept(*this);
         decreaseIndent();
     }
-    
+
     decreaseIndent();
 }
 
@@ -171,19 +174,19 @@ void ASTDumper::visit(LoopwhileStmt* node) {
     printIndent();
     out_ << "LoopwhileStmt\n";
     increaseIndent();
-    
+
     printIndent();
     out_ << "Condition:\n";
     increaseIndent();
     node->getCond()->accept(*this);
     decreaseIndent();
-    
+
     printIndent();
     out_ << "Body:\n";
     increaseIndent();
     node->getBody()->accept(*this);
     decreaseIndent();
-    
+
     decreaseIndent();
 }
 
@@ -205,11 +208,16 @@ void ASTDumper::visit(TraceStmt* node) {
     decreaseIndent();
 }
 
+void ASTDumper::visit(ImportDecl* node) {
+    printIndent();
+    out_ << "ImportDecl: import " << node->getModule() << " from " << node->getSource() << "\\n";
+}
+
 void ASTDumper::visit(FuncDecl* node) {
     printIndent();
     out_ << "FuncDecl: " << node->getName() << "\n";
     increaseIndent();
-    
+
     if (!node->getParams().empty()) {
         printIndent();
         out_ << "Parameters:\n";
@@ -225,7 +233,7 @@ void ASTDumper::visit(FuncDecl* node) {
         }
         decreaseIndent();
     }
-    
+
     if (node->getReturnType()) {
         printIndent();
         out_ << "ReturnType:\n";
@@ -233,7 +241,7 @@ void ASTDumper::visit(FuncDecl* node) {
         node->getReturnType()->accept(*this);
         decreaseIndent();
     }
-    
+
     if (node->getBody()) {
         printIndent();
         out_ << "Body:\n";
@@ -241,7 +249,7 @@ void ASTDumper::visit(FuncDecl* node) {
         node->getBody()->accept(*this);
         decreaseIndent();
     }
-    
+
     decreaseIndent();
 }
 
@@ -256,4 +264,3 @@ void ASTDumper::visit(Program* node) {
 }
 
 } // namespace xypher
-
