@@ -1,8 +1,25 @@
-// Hello World in Xypher
-// This is the simplest program in Xypher language
+// Hello World - Simplest Example
+// Demonstrates: basic I/O (no imports needed for core functions)
 
-func main() -> i32 {
-    say("Hello, World from Xypher!");
-    return 0;
+func greet(name: str) -> void {
+    say("Hello,", name, "!");
 }
 
+func main() -> i32 {
+    say("╔════════════════════════════════════╗");
+    say("║         Hello World!               ║");
+    say("╚════════════════════════════════════╝");
+    say("");
+    
+    say("Welcome to Xypher!");
+    say("");
+    
+    greet("Alice");
+    greet("Bob");
+    greet("Charlie");
+    
+    say("");
+    say("✓ Your first Xypher program works!");
+    
+    return 0;
+}

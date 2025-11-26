@@ -60,6 +60,7 @@ void Parser::synchronize() {
         
         switch (current_.getType()) {
             case TokenType::KwFunc:
+            case TokenType::KwImport:
             case TokenType::KwLet:
             case TokenType::KwConst:
             case TokenType::KwIf:
@@ -98,6 +99,9 @@ Unique<Program> Parser::parseProgram() {
 }
 
 Unique<Stmt> Parser::declaration() {
+    if (match(TokenType::KwImport)) {
+        return importDecl();
+    }
     if (match(TokenType::KwFunc)) {
         return funcDecl();
     }
@@ -141,6 +145,30 @@ Unique<Stmt> Parser::funcDecl() {
         name, std::move(params), std::move(returnType),
         Unique<BlockStmt>(body), loc
     );
+}
+
+Unique<Stmt> Parser::importDecl() {
+    auto loc = previous_.getLocation();
+    
+    if (!consume(TokenType::Identifier, "Expected module name after 'import'")) {
+        return nullptr;
+    }
+    String module = previous_.getLexeme();
+    
+    if (!consume(TokenType::KwFrom, "Expected 'from' after module name")) {
+        return nullptr;
+    }
+    
+    if (!consume(TokenType::Identifier, "Expected source library name after 'from'")) {
+        return nullptr;
+    }
+    String source = previous_.getLexeme();
+    
+    if (!consume(TokenType::Semicolon, "Expected ';' after import statement")) {
+        return nullptr;
+    }
+    
+    return makeUnique<ImportDecl>(module, source, loc);
 }
 
 Unique<Stmt> Parser::varDecl() {

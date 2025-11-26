@@ -41,6 +41,7 @@ private:
     // Parsing methods
     Unique<Stmt> declaration();
     Unique<Stmt> funcDecl();
+    Unique<Stmt> importDecl();
     Unique<Stmt> varDecl();
     Unique<Stmt> statement();
     Unique<Stmt> exprStatement();

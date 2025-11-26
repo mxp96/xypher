@@ -6,6 +6,7 @@
 #include "ast/ASTVisitor.h"
 #include "frontend/Diagnostics.h"
 #include "sema/SymbolTable.h"
+#include "sema/ModuleRegistry.h"
 
 namespace xypher {
 
@@ -45,6 +46,7 @@ class SemanticAnalyzer : public ASTVisitor {
   private:
     DiagnosticEngine& diags_;
     SymbolTable symbols_;
+    ModuleRegistry moduleRegistry_;
     Map<Expr*, String> exprTypes_;
     String currentFunction_;
     String currentReturnType_;

@@ -7,6 +7,7 @@
 #include <optional>
 #include <variant>
 #include <unordered_map>
+#include <set>
 #include <iostream>
 #include <cassert>
 
@@ -29,6 +30,9 @@ using Optional = std::optional<T>;
 
 template<typename K, typename V>
 using Map = std::unordered_map<K, V>;
+
+template<typename T>
+using Set = std::set<T>;
 
 template<typename T, typename... Args>
 Unique<T> makeUnique(Args&&... args) {

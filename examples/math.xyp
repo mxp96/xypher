@@ -1,0 +1,64 @@
+// Math Functions Example
+// Demonstrates: import system, math module, core I/O
+
+import math from xystd;
+
+func calculateCircle(radius: f64) -> void {
+    say("=== Circle Calculations ===");
+    say("Radius:", radius);
+    
+    let pi: f64 = 3.14159265359;
+    let area: f64 = pi * xy_pow(radius, 2.0);
+    let circumference: f64 = 2.0 * pi * radius;
+    
+    say("Area:", area);
+    say("Circumference:", circumference);
+    say("");
+}
+
+func testTrigonometry() -> void {
+    say("=== Trigonometry Functions ===");
+    
+    let angle: f64 = 0.785398;  // 45 degrees in radians
+    
+    say("Angle (radians):", angle);
+    say("sin(angle):", xy_sin(angle));
+    say("cos(angle):", xy_cos(angle));
+    say("tan(angle):", xy_tan(angle));
+    say("");
+}
+
+func testPowerAndRoots() -> void {
+    say("=== Power and Root Functions ===");
+    
+    say("sqrt(144):", xy_sqrt(144.0));
+    say("pow(2, 10):", xy_pow(2.0, 10.0));
+    say("pow(3, 3):", xy_pow(3.0, 3.0));
+    say("");
+}
+
+func testRounding() -> void {
+    say("=== Rounding Functions ===");
+    
+    let num: f64 = 3.7;
+    say("Number:", num);
+    say("floor:", xy_floor(num));
+    say("ceil:", xy_ceil(num));
+    say("round:", xy_round(num));
+    say("");
+}
+
+func main() -> i32 {
+    say("╔════════════════════════════════════╗");
+    say("║      Xypher Math Examples          ║");
+    say("╚════════════════════════════════════╝");
+    say("");
+    
+    calculateCircle(5.0);
+    testTrigonometry();
+    testPowerAndRoots();
+    testRounding();
+    
+    say("✓ All math functions working!");
+    return 0;
+}

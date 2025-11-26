@@ -1,0 +1,62 @@
+// Time and Performance Example
+// Demonstrates: time module, performance measurement
+
+import time from xystd;
+import math from xystd;
+
+func performanceTest() -> void {
+    say("=== Performance Measurement ===");
+    say("");
+    
+    say("Starting computation...");
+    let startTime: i64 = xy_time_ms();
+    
+    // Compute something intensive
+    let sum: f64 = 0.0;
+    let i: i32 = 0;
+    loopwhile (i < 1000) {
+        sum = sum + xy_sqrt(i * 1.0);
+        i = i + 1;
+    }
+    
+    let endTime: i64 = xy_time_ms();
+    let elapsed: i64 = endTime - startTime;
+    
+    say("Result:", sum);
+    say("Time elapsed (ms):", elapsed);
+    say("");
+}
+
+func clockDemo() -> void {
+    say("=== Time Functions Demo ===");
+    say("");
+    
+    say("Current time:");
+    say("  Nanoseconds:", xy_time_ns());
+    say("  Microseconds:", xy_time_us());
+    say("  Milliseconds:", xy_time_ms());
+    say("  Seconds:", xy_time_s());
+    say("");
+}
+
+func sleepDemo() -> void {
+    say("=== Sleep Demo ===");
+    say("Sleeping for 1 second...");
+    xy_sleep_ms(1000);
+    say("Awake!");
+    say("");
+}
+
+func main() -> i32 {
+    say("╔════════════════════════════════════╗");
+    say("║     Time Functions Example         ║");
+    say("╚════════════════════════════════════╝");
+    say("");
+    
+    clockDemo();
+    performanceTest();
+    sleepDemo();
+    
+    say("✓ Time module working correctly!");
+    return 0;
+}

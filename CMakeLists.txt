@@ -74,6 +74,7 @@ set(SEMA_SOURCES
     src/sema/SemanticAnalyzer.cpp
     src/sema/TypeChecker.cpp
     src/sema/SymbolTable.cpp
+    src/sema/ModuleRegistry.cpp
 )
 
 set(CODEGEN_SOURCES

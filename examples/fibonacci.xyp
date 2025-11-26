@@ -1,4 +1,7 @@
-// Fibonacci sequence in Xypher
+// Fibonacci Sequence Example
+// Demonstrates: recursion, math functions, loops
+
+import math from xystd;
 
 func fibonacci(n: i32) -> i32 {
     if (n <= 1) {
@@ -12,39 +15,59 @@ func fibonacciIterative(n: i32) -> i32 {
         return n;
     }
     
-    let a: i32 = 0;
-    let b: i32 = 1;
+    let prev: i32 = 0;
+    let current: i32 = 1;
     let i: i32 = 2;
     
     loopwhile (i <= n) {
-        let temp: i32 = a + b;
-        a = b;
-        b = temp;
+        let temp: i32 = current;
+        current = prev + current;
+        prev = temp;
         i = i + 1;
     }
     
-    return b;
+    return current;
+}
+
+func printFibonacciSequence(count: i32) -> void {
+    say("Fibonacci sequence (first", count, "numbers):");
+    
+    let i: i32 = 0;
+    loopwhile (i < count) {
+        let fib: i32 = fibonacciIterative(i);
+        xy_say_i32(fib);
+        say(" ");
+        i = i + 1;
+    }
+    say("");
+}
+
+func goldenRatio() -> void {
+    say("");
+    say("=== Golden Ratio Approximation ===");
+    
+    let n1: f64 = 89.0;
+    let n2: f64 = 55.0;
+    let ratio: f64 = n1 / n2;
+    
+    say("Fib(11) / Fib(10) ≈ Golden Ratio");
+    say("Ratio:", ratio);
+    say("(φ ≈ 1.618033988749...)");
 }
 
 func main() -> i32 {
-    say("Fibonacci sequence (recursive):");
-    let i: i32 = 0;
+    say("╔════════════════════════════════════╗");
+    say("║    Fibonacci Sequence Example      ║");
+    say("╚════════════════════════════════════╝");
+    say("");
     
-    loopwhile (i < 10) {
-        let fib: i32 = fibonacci(i);
-        say("F(", i, ") =", fib);
-        i = i + 1;
-    }
+    printFibonacciSequence(15);
     
-    say("\nFibonacci sequence (iterative):");
-    i = 0;
+    say("");
+    say("Recursive fib(10):", fibonacci(10));
+    say("Iterative fib(10):", fibonacciIterative(10));
     
-    loopwhile (i < 10) {
-        let fib: i32 = fibonacciIterative(i);
-        say("F(", i, ") =", fib);
-        i = i + 1;
-    }
+    goldenRatio();
     
     return 0;
 }
-

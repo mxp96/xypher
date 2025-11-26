@@ -97,7 +97,7 @@ void CodeGenerator::declarePrintf() {
 
 void CodeGenerator::declareBuiltins() {
     declarePrintf();
-
+    
     auto i8Type = llvm::Type::getInt8Ty(*context_);
     auto i32Type = llvm::Type::getInt32Ty(*context_);
     auto i64Type = llvm::Type::getInt64Ty(*context_);
@@ -105,135 +105,129 @@ void CodeGenerator::declareBuiltins() {
     auto f64Type = llvm::Type::getDoubleTy(*context_);
     auto voidType = llvm::Type::getVoidTy(*context_);
     auto ptrType = llvm::PointerType::get(*context_, 0);
+    
+    // Only declare core functions (always available)
+    auto coreFunctions = moduleRegistry_.getCoreFunctions();
+    
+    for (const auto& func : coreFunctions) {
+        if (func.name == "xy_say_i32") {
+            llvm::Function::Create(llvm::FunctionType::get(voidType, {i32Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_say_i64") {
+            llvm::Function::Create(llvm::FunctionType::get(voidType, {i64Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_say_f32") {
+            llvm::Function::Create(llvm::FunctionType::get(voidType, {f32Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_say_f64") {
+            llvm::Function::Create(llvm::FunctionType::get(voidType, {f64Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_say_str") {
+            llvm::Function::Create(llvm::FunctionType::get(voidType, {ptrType}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_say_bool") {
+            llvm::Function::Create(llvm::FunctionType::get(voidType, {i32Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_say_char") {
+            llvm::Function::Create(llvm::FunctionType::get(voidType, {i8Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_say_newline") {
+            llvm::Function::Create(llvm::FunctionType::get(voidType, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_grab_i32") {
+            llvm::Function::Create(llvm::FunctionType::get(i32Type, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_grab_i64") {
+            llvm::Function::Create(llvm::FunctionType::get(i64Type, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_grab_str") {
+            llvm::Function::Create(llvm::FunctionType::get(ptrType, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        }
+    }
+}
 
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {i32Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_say_i32", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {i64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_say_i64", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {f32Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_say_f32", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_say_f64", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_say_str", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {i32Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_say_bool", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {i8Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_say_char", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, false),
-                           llvm::Function::ExternalLinkage, "xy_say_newline", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i32Type, false), llvm::Function::ExternalLinkage,
-                           "xy_grab_i32", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i64Type, false), llvm::Function::ExternalLinkage,
-                           "xy_grab_i64", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(ptrType, false), llvm::Function::ExternalLinkage,
-                           "xy_grab_str", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(ptrType, {i64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_alloc", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_free", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i64Type, {ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_strlen", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(ptrType, {ptrType, ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_strcat", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i32Type, {ptrType, ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_strcmp", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_sqrt", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type, f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_pow", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_sin", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_cos", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_tan", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_abs_f64", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i32Type, {i32Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_abs_i32", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_floor", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_ceil", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_round", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i32Type, {i32Type, i32Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_min_i32", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i32Type, {i32Type, i32Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_max_i32", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type, f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_min_f64", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type, f64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_max_f64", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(ptrType, {i64Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_hashmap_create", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_hashmap_destroy", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i32Type, {ptrType, ptrType, ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_hashmap_insert", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(ptrType, {ptrType, ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_hashmap_get", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i32Type, {ptrType, ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_hashmap_remove", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i32Type, {ptrType, ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_hashmap_contains", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i64Type, {ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_hashmap_size", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {ptrType}, false),
-                           llvm::Function::ExternalLinkage, "xy_hashmap_clear", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i64Type, false), llvm::Function::ExternalLinkage,
-                           "xy_time_ns", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i64Type, false), llvm::Function::ExternalLinkage,
-                           "xy_time_us", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i64Type, false), llvm::Function::ExternalLinkage,
-                           "xy_time_ms", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(i64Type, false), llvm::Function::ExternalLinkage,
-                           "xy_time_s", module_.get());
-
-    llvm::Function::Create(llvm::FunctionType::get(voidType, {i32Type}, false),
-                           llvm::Function::ExternalLinkage, "xy_sleep_ms", module_.get());
+void CodeGenerator::declareModuleFunctions(const String& moduleName) {
+    auto i32Type = llvm::Type::getInt32Ty(*context_);
+    auto i64Type = llvm::Type::getInt64Ty(*context_);
+    auto f64Type = llvm::Type::getDoubleTy(*context_);
+    auto voidType = llvm::Type::getVoidTy(*context_);
+    auto ptrType = llvm::PointerType::get(*context_, 0);
+    
+    auto functions = moduleRegistry_.getModuleFunctions(moduleName);
+    
+    for (const auto& func : functions) {
+        // Math module
+        if (func.name == "xy_sqrt" || func.name == "xy_sin" || func.name == "xy_cos" || 
+            func.name == "xy_tan" || func.name == "xy_abs_f64" || func.name == "xy_floor" ||
+            func.name == "xy_ceil" || func.name == "xy_round") {
+            llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_pow" || func.name == "xy_min_f64" || func.name == "xy_max_f64") {
+            llvm::Function::Create(llvm::FunctionType::get(f64Type, {f64Type, f64Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_abs_i32") {
+            llvm::Function::Create(llvm::FunctionType::get(i32Type, {i32Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_min_i32" || func.name == "xy_max_i32") {
+            llvm::Function::Create(llvm::FunctionType::get(i32Type, {i32Type, i32Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        }
+        // String module
+        else if (func.name == "xy_strlen") {
+            llvm::Function::Create(llvm::FunctionType::get(i64Type, {ptrType}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_strcat") {
+            llvm::Function::Create(llvm::FunctionType::get(ptrType, {ptrType, ptrType}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_strcmp") {
+            llvm::Function::Create(llvm::FunctionType::get(i32Type, {ptrType, ptrType}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        }
+        // Hashmap module  
+        else if (func.name == "xy_hashmap_create") {
+            // xy_hashmap_create(unsigned long long capacity) -> xy_hashmap*
+            llvm::Function::Create(llvm::FunctionType::get(ptrType, {i64Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_hashmap_destroy" || func.name == "xy_hashmap_clear") {
+            // void xy_hashmap_destroy(xy_hashmap* map)
+            llvm::Function::Create(llvm::FunctionType::get(voidType, {ptrType}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_hashmap_insert") {
+            // int xy_hashmap_insert(xy_hashmap* map, const char* key, void* value)
+            llvm::Function::Create(llvm::FunctionType::get(i32Type, {ptrType, ptrType, ptrType}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_hashmap_get") {
+            // void* xy_hashmap_get(xy_hashmap* map, const char* key)
+            llvm::Function::Create(llvm::FunctionType::get(ptrType, {ptrType, ptrType}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_hashmap_remove" || func.name == "xy_hashmap_contains") {
+            // int xy_hashmap_remove(xy_hashmap* map, const char* key)
+            llvm::Function::Create(llvm::FunctionType::get(i32Type, {ptrType, ptrType}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_hashmap_size") {
+            // unsigned long long xy_hashmap_size(xy_hashmap* map)
+            llvm::Function::Create(llvm::FunctionType::get(i64Type, {ptrType}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        }
+        // Time module
+        else if (func.name == "xy_time_ns" || func.name == "xy_time_us" || 
+                 func.name == "xy_time_ms" || func.name == "xy_time_s") {
+            llvm::Function::Create(llvm::FunctionType::get(i64Type, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_sleep_ms") {
+            llvm::Function::Create(llvm::FunctionType::get(voidType, {i32Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        }
+        // Memory module
+        else if (func.name == "xy_alloc") {
+            llvm::Function::Create(llvm::FunctionType::get(ptrType, {i64Type}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        } else if (func.name == "xy_free") {
+            llvm::Function::Create(llvm::FunctionType::get(voidType, {ptrType}, false),
+                                   llvm::Function::ExternalLinkage, func.name, module_.get());
+        }
+    }
 }
 
 void CodeGenerator::error(const String& message) {
@@ -485,10 +479,25 @@ void CodeGenerator::visit(CallExpr* node) {
     }
 
     std::vector<llvm::Value*> args;
+    size_t paramIdx = 0;
     for (const auto& arg : node->getArgs()) {
         arg->accept(*this);
         if (currentValue_) {
-            args.push_back(currentValue_);
+            llvm::Value* argValue = currentValue_;
+            
+            // Auto-convert i32 to i64 if function expects i64
+            if (paramIdx < func->arg_size()) {
+                llvm::Type* paramType = func->getFunctionType()->getParamType(paramIdx);
+                llvm::Type* argType = argValue->getType();
+                
+                // If parameter is i64 and argument is i32, convert
+                if (paramType->isIntegerTy(64) && argType->isIntegerTy(32)) {
+                    argValue = builder_->CreateSExt(argValue, paramType, "conv");
+                }
+            }
+            
+            args.push_back(argValue);
+            paramIdx++;
         }
     }
 
@@ -777,7 +786,15 @@ void CodeGenerator::visit(FuncDecl* node) {
 }
 
 void CodeGenerator::visit(ImportDecl* node) {
-    (void)node;
+    const String& module = node->getModule();
+    const String& source = node->getSource();
+    
+    if (source == "xystd" && moduleRegistry_.isValidModule(module)) {
+        if (importedModules_.find(module) == importedModules_.end()) {
+            importedModules_.insert(module);
+            declareModuleFunctions(module);
+        }
+    }
 }
 
 void CodeGenerator::visit(Program* node) {

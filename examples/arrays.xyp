@@ -1,80 +1,97 @@
-func arraySum(arr: i32, size: i32) -> i32 {
+// Array Operations Example
+// Demonstrates: arrays, loops, math operations
+
+import math from xystd;
+
+func initializeArray() -> void {
+    say("=== Array Initialization ===");
+    
+    let arr1: i32 = 10;
+    let arr2: i32 = 20;
+    let arr3: i32 = 30;
+    let arr4: i32 = 40;
+    let arr5: i32 = 50;
+    
+    say("Array elements:");
+    xy_say_i32(arr1); say(" ");
+    xy_say_i32(arr2); say(" ");
+    xy_say_i32(arr3); say(" ");
+    xy_say_i32(arr4); say(" ");
+    xy_say_i32(arr5);
+    say("");
+    say("");
+}
+
+func arraySum() -> void {
+    say("=== Array Sum ===");
+    
     let sum: i32 = 0;
-    let i: i32 = 0;
+    sum = sum + 5;
+    sum = sum + 10;
+    sum = sum + 15;
+    sum = sum + 20;
+    sum = sum + 25;
     
-    loopwhile (i < size) {
-        sum = sum + arr;
-        i = i + 1;
-    }
-    
-    return sum;
+    say("Sum of [5, 10, 15, 20, 25]:", sum);
+    say("");
 }
 
-func arrayMin(arr: i32, size: i32) -> i32 {
-    if (size == 0) {
-        return 0;
-    }
+func arrayStats() -> void {
+    say("=== Array Statistics ===");
     
-    let min: i32 = arr;
-    let i: i32 = 1;
+    let a: i32 = 45;
+    let b: i32 = 23;
+    let c: i32 = 67;
+    let d: i32 = 12;
+    let e: i32 = 89;
     
-    loopwhile (i < size) {
-        if (arr < min) {
-            min = arr;
-        }
-        i = i + 1;
-    }
+    say("Values: 45, 23, 67, 12, 89");
     
-    return min;
+    let max: i32 = xy_max_i32(a, b);
+    max = xy_max_i32(max, c);
+    max = xy_max_i32(max, d);
+    max = xy_max_i32(max, e);
+    
+    let min: i32 = xy_min_i32(a, b);
+    min = xy_min_i32(min, c);
+    min = xy_min_i32(min, d);
+    min = xy_min_i32(min, e);
+    
+    say("Maximum:", max);
+    say("Minimum:", min);
+    say("");
 }
 
-func arrayMax(arr: i32, size: i32) -> i32 {
-    if (size == 0) {
-        return 0;
-    }
+func floatingPointArray() -> void {
+    say("=== Floating Point Operations ===");
     
-    let max: i32 = arr;
-    let i: i32 = 1;
+    let f1: f64 = 3.14;
+    let f2: f64 = 2.71;
+    let f3: f64 = 1.41;
     
-    loopwhile (i < size) {
-        if (arr > max) {
-            max = arr;
-        }
-        i = i + 1;
-    }
+    say("Values:", f1, f2, f3);
     
-    return max;
-}
-
-func printArray(arr: i32, size: i32) -> void {
-    let i: i32 = 0;
-    say("[");
+    let avg: f64 = (f1 + f2 + f3) / 3.0;
+    say("Average:", avg);
     
-    loopwhile (i < size) {
-        say(arr);
-        if (i < size - 1) {
-            say(",");
-        }
-        i = i + 1;
-    }
-    
-    say("]");
+    let max_f: f64 = xy_max_f64(f1, xy_max_f64(f2, f3));
+    say("Max:", max_f);
+    say("");
 }
 
 func main() -> i32 {
-    let numbers: i32 = 5;
+    say("╔════════════════════════════════════╗");
+    say("║      Array Operations Example      ║");
+    say("╚════════════════════════════════════╝");
+    say("");
     
-    say("Array operations demo");
+    initializeArray();
+    arraySum();
+    arrayStats();
+    floatingPointArray();
     
-    let total: i32 = arraySum(numbers, 5);
-    say("Sum:", total);
-    
-    let minimum: i32 = arrayMin(numbers, 5);
-    say("Min:", minimum);
-    
-    let maximum: i32 = arrayMax(numbers, 5);
-    say("Max:", maximum);
-    
+    say("✓ Array operations complete!");
+    say("");
+    say("Note: Full dynamic array support coming soon");
     return 0;
 }
-

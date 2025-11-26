@@ -1,6 +1,6 @@
 #include "sema/SemanticAnalyzer.h"
-
 #include "sema/TypeChecker.h"
+#include "sema/ModuleRegistry.h"
 
 namespace xypher {
 
@@ -16,144 +16,11 @@ bool SemanticAnalyzer::analyze(Program* program) {
 }
 
 void SemanticAnalyzer::registerBuiltinFunctions() {
-    Symbol sym;
-    sym.kind = SymbolKind::Function;
-
-    sym.name = "xy_say_i32";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_say_i64";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_say_f32";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_say_f64";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_say_str";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_say_bool";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_say_char";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_say_newline";
-    sym.type = "void";
-    symbols_.declare(sym);
-
-    sym.name = "xy_grab_i32";
-    sym.type = "i32";
-    symbols_.declare(sym);
-    sym.name = "xy_grab_i64";
-    sym.type = "i64";
-    symbols_.declare(sym);
-    sym.name = "xy_grab_str";
-    sym.type = "str";
-    symbols_.declare(sym);
-
-    sym.name = "xy_alloc";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_free";
-    sym.type = "void";
-    symbols_.declare(sym);
-
-    sym.name = "xy_strlen";
-    sym.type = "i64";
-    symbols_.declare(sym);
-    sym.name = "xy_strcat";
-    sym.type = "str";
-    symbols_.declare(sym);
-    sym.name = "xy_strcmp";
-    sym.type = "i32";
-    symbols_.declare(sym);
-
-    sym.name = "xy_sqrt";
-    sym.type = "f64";
-    symbols_.declare(sym);
-    sym.name = "xy_pow";
-    sym.type = "f64";
-    symbols_.declare(sym);
-    sym.name = "xy_sin";
-    sym.type = "f64";
-    symbols_.declare(sym);
-    sym.name = "xy_cos";
-    sym.type = "f64";
-    symbols_.declare(sym);
-    sym.name = "xy_tan";
-    sym.type = "f64";
-    symbols_.declare(sym);
-    sym.name = "xy_abs_f64";
-    sym.type = "f64";
-    symbols_.declare(sym);
-    sym.name = "xy_abs_i32";
-    sym.type = "i32";
-    symbols_.declare(sym);
-    sym.name = "xy_floor";
-    sym.type = "f64";
-    symbols_.declare(sym);
-    sym.name = "xy_ceil";
-    sym.type = "f64";
-    symbols_.declare(sym);
-    sym.name = "xy_round";
-    sym.type = "f64";
-    symbols_.declare(sym);
-    sym.name = "xy_min_i32";
-    sym.type = "i32";
-    symbols_.declare(sym);
-    sym.name = "xy_max_i32";
-    sym.type = "i32";
-    symbols_.declare(sym);
-    sym.name = "xy_min_f64";
-    sym.type = "f64";
-    symbols_.declare(sym);
-    sym.name = "xy_max_f64";
-    sym.type = "f64";
-    symbols_.declare(sym);
-
-    sym.name = "xy_hashmap_create";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_hashmap_destroy";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_hashmap_insert";
-    sym.type = "i32";
-    symbols_.declare(sym);
-    sym.name = "xy_hashmap_get";
-    sym.type = "void";
-    symbols_.declare(sym);
-    sym.name = "xy_hashmap_remove";
-    sym.type = "i32";
-    symbols_.declare(sym);
-    sym.name = "xy_hashmap_contains";
-    sym.type = "i32";
-    symbols_.declare(sym);
-    sym.name = "xy_hashmap_size";
-    sym.type = "i64";
-    symbols_.declare(sym);
-    sym.name = "xy_hashmap_clear";
-    sym.type = "void";
-    symbols_.declare(sym);
-
-    sym.name = "xy_time_ns";
-    sym.type = "i64";
-    symbols_.declare(sym);
-    sym.name = "xy_time_us";
-    sym.type = "i64";
-    symbols_.declare(sym);
-    sym.name = "xy_time_ms";
-    sym.type = "i64";
-    symbols_.declare(sym);
-    sym.name = "xy_time_s";
-    sym.type = "i64";
-    symbols_.declare(sym);
-    sym.name = "xy_sleep_ms";
-    sym.type = "void";
-    symbols_.declare(sym);
+    // Register core functions (always available)
+    auto coreFunctions = moduleRegistry_.getCoreFunctions();
+    for (const auto& sym : coreFunctions) {
+        symbols_.declare(sym);
+    }
 }
 
 void SemanticAnalyzer::error(const String& message, const SourceLocation& loc) {
@@ -231,14 +98,34 @@ void SemanticAnalyzer::visit(UnaryExpr* node) {
 
 void SemanticAnalyzer::visit(CallExpr* node) {
     node->getCallee()->accept(*this);
-
+    
+    // Validate function exists
+    auto* identExpr = dynamic_cast<Identifier*>(node->getCallee());
+    if (identExpr) {
+        Symbol* funcSymbol = symbols_.lookup(identExpr->getName());
+        if (!funcSymbol) {
+            error("Undefined function: " + identExpr->getName() + 
+                  ". Did you forget to import the required module?", 
+                  node->getLocation());
+            exprTypes_[node] = "void";
+            return;
+        }
+        
+        if (funcSymbol->kind != SymbolKind::Function) {
+            error(identExpr->getName() + " is not a function", node->getLocation());
+            exprTypes_[node] = "void";
+            return;
+        }
+        
+        // Use function's return type
+        exprTypes_[node] = funcSymbol->type;
+    } else {
+        exprTypes_[node] = "i32";  // Default for complex callees
+    }
+    
     for (const auto& arg : node->getArgs()) {
         arg->accept(*this);
     }
-
-    // For now, assume function returns i32
-    // In a real implementation, we'd look up the function signature
-    exprTypes_[node] = "i32";
 }
 
 void SemanticAnalyzer::visit(TypeName* node) {
@@ -393,7 +280,29 @@ void SemanticAnalyzer::visit(FuncDecl* node) {
 }
 
 void SemanticAnalyzer::visit(ImportDecl* node) {
-    (void)node;
+    const String& module = node->getModule();
+    const String& source = node->getSource();
+    
+    // Currently only support xystd
+    if (source != "xystd") {
+        error("Unknown library '" + source + "'. Only 'xystd' is supported.", node->getLocation());
+        return;
+    }
+    
+    // Check if module exists
+    if (!moduleRegistry_.isValidModule(module)) {
+        error("Module '" + module + "' not found in library '" + source + "'", node->getLocation());
+        error("Available modules: core, math, string, hashmap, time, memory", node->getLocation());
+        return;
+    }
+    
+    // Register all functions from the module
+    auto functions = moduleRegistry_.getModuleFunctions(module);
+    for (const auto& sym : functions) {
+        if (!symbols_.declare(sym)) {
+            // Function already declared (maybe from another import), skip quietly
+        }
+    }
 }
 
 void SemanticAnalyzer::visit(Program* node) {

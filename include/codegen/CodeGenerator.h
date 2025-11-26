@@ -5,6 +5,7 @@
 #include "ast/AST.h"
 #include "ast/ASTVisitor.h"
 #include "frontend/Diagnostics.h"
+#include "sema/ModuleRegistry.h"
 
 #include <llvm/IR/Function.h>
 #include <llvm/IR/IRBuilder.h>
@@ -65,7 +66,9 @@ class CodeGenerator : public ASTVisitor {
     Map<String, llvm::AllocaInst*> namedValues_;
     Map<String, llvm::GlobalVariable*> globalValues_;
     Map<String, llvm::Function*> functions_;
-
+    Set<String> importedModules_;
+    ModuleRegistry moduleRegistry_;
+    
     llvm::Value* currentValue_ = nullptr;
     llvm::Function* currentFunction_ = nullptr;
 
@@ -75,6 +78,7 @@ class CodeGenerator : public ASTVisitor {
 
     void declarePrintf();
     void declareBuiltins();
+    void declareModuleFunctions(const String& moduleName);
 
     void error(const String& message);
 };

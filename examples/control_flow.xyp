@@ -1,48 +1,119 @@
-// Control flow in Xypher
+// Control Flow Example
+// Demonstrates: if/else, loops, comparisons (no enums yet)
 
-func checkNumber(num: i32) -> void {
-    if (num > 0) {
-        say("Positive number");
-    } else {
-        if (num < 0) {
-            say("Negative number");
-        } else {
-            say("Zero");
-        }
-    }
-}
+import math from xystd;
 
-func countDown(n: i32) -> void {
-    loopwhile (n > 0) {
-        say("Count:", n);
-        n = n - 1;
-    }
-    say("Lift off!");
-}
-
-func sumUpTo(n: i32) -> i32 {
-    let sum: i32 = 0;
-    let i: i32 = 1;
+func testIfElse(value: i32) -> void {
+    say("=== If/Else Statements ===");
+    say("Testing value:", value);
     
-    loopwhile (i <= n) {
-        sum = sum + i;
+    if (value > 0) {
+        say("Value is POSITIVE");
+    }
+    
+    if (value == 0) {
+        say("Value is ZERO");
+    }
+    
+    if (value < 0) {
+        say("Value is NEGATIVE");
+    }
+    say("");
+}
+
+func testLoops() -> void {
+    say("=== Loop Examples ===");
+    
+    say("Counting 1 to 5:");
+    let i: i32 = 1;
+    loopwhile (i <= 5) {
+        xy_say_i32(i);
+        say(" ");
         i = i + 1;
     }
+    say("");
+    say("");
     
-    return sum;
+    say("Countdown from 5:");
+    let j: i32 = 5;
+    loopwhile (j > 0) {
+        xy_say_i32(j);
+        say(" ");
+        j = j - 1;
+    }
+    say("");
+    say("");
+}
+
+func categorizeNumber(num: i32) -> void {
+    say("Categorizing:", num);
+    
+    if (num < 0) {
+        say("  • Negative number");
+    }
+    
+    if (num == 0) {
+        say("  • Zero");
+    }
+    
+    if (num > 0) {
+        say("  • Positive number");
+    }
+    
+    if (xy_abs_i32(num) > 100) {
+        say("  • Large magnitude (> 100)");
+    }
+    
+    if (num % 2 == 0) {
+        say("  • Even number");
+    }
+    
+    if (num % 2 == 1) {
+        say("  • Odd number");
+    }
+    say("");
+}
+
+func nestedConditions(x: i32, y: i32) -> void {
+    say("=== Nested Conditions ===");
+    say("x =", x, ", y =", y);
+    
+    if (x > 0) {
+        if (y > 0) {
+            say("Both positive (Quadrant I)");
+        }
+    }
+    
+    if (x < 0) {
+        if (y > 0) {
+            say("x negative, y positive (Quadrant II)");
+        }
+    }
+    say("");
 }
 
 func main() -> i32 {
-    checkNumber(42);
-    checkNumber(-10);
-    checkNumber(0);
+    say("╔════════════════════════════════════╗");
+    say("║     Control Flow Examples          ║");
+    say("╚════════════════════════════════════╝");
+    say("");
     
-    say("Counting down:");
-    countDown(5);
+    testIfElse(42);
+    testIfElse(0);
+    testIfElse(-15);
     
-    let total: i32 = sumUpTo(10);
-    say("Sum from 1 to 10:", total);
+    testLoops();
     
+    say("=== Number Categorization ===");
+    categorizeNumber(42);
+    categorizeNumber(-17);
+    categorizeNumber(150);
+    
+    nestedConditions(5, 10);
+    nestedConditions(-3, 7);
+    
+    say("✓ All control flow tests complete!");
+    say("");
+    say("Note: Enum support coming in future release");
     return 0;
 }
-
