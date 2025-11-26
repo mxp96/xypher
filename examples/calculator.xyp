@@ -1,0 +1,216 @@
+// CLI Calculator Example - Simple Version
+// Demonstrates: user input, menu system, math operations
+
+import math from xystd;
+
+func printMenu() -> void {
+    say("");
+    say("╔════════════════════════════════════╗");
+    say("║      Xypher CLI Calculator         ║");
+    say("╚════════════════════════════════════╝");
+    say("");
+    say("Choose an operation:");
+    say("  1. Addition (+)");
+    say("  2. Subtraction (-)");
+    say("  3. Multiplication (*)");
+    say("  4. Division (/)");
+    say("  5. Power (x^y)");
+    say("  6. Square Root (√x)");
+    say("  7. Min/Max");
+    say("  0. Exit");
+    say("");
+}
+
+func addition() -> void {
+    say("=== Addition ===");
+    say("Enter first number:");
+    let a: i32 = xy_grab_i32();
+    
+    say("Enter second number:");
+    let b: i32 = xy_grab_i32();
+    
+    let result: i32 = a + b;
+    say("Result:", a, "+", b, "=", result);
+}
+
+func subtraction() -> void {
+    say("=== Subtraction ===");
+    say("Enter first number:");
+    let a: i32 = xy_grab_i32();
+    
+    say("Enter second number:");
+    let b: i32 = xy_grab_i32();
+    
+    let result: i32 = a - b;
+    say("Result:", a, "-", b, "=", result);
+}
+
+func multiplication() -> void {
+    say("=== Multiplication ===");
+    say("Enter first number:");
+    let a: i32 = xy_grab_i32();
+    
+    say("Enter second number:");
+    let b: i32 = xy_grab_i32();
+    
+    let result: i32 = a * b;
+    say("Result:", a, "*", b, "=", result);
+}
+
+func division() -> void {
+    say("=== Division ===");
+    say("Enter numerator:");
+    let a: i32 = xy_grab_i32();
+    
+    say("Enter denominator:");
+    let b: i32 = xy_grab_i32();
+    
+    if (b == 0) {
+        say("Error: Division by zero!");
+        return;
+    }
+    
+    let result: i32 = a / b;
+    let remainder: i32 = a % b;
+    say("Result:", a, "/", b, "=", result);
+    say("Remainder:", remainder);
+}
+
+func power() -> void {
+    say("=== Power (using integers) ===");
+    say("Enter base:");
+    let base: i32 = xy_grab_i32();
+    
+    say("Enter exponent (small positive integers work best):");
+    let exp: i32 = xy_grab_i32();
+    
+    say("Calculating", base, "^", exp);
+    
+    let result: i32 = 1;
+    let i: i32 = 0;
+    
+    loopwhile (i < exp) {
+        result = result * base;
+        i = i + 1;
+    }
+    
+    say("Result:", result);
+}
+
+func squareRoot() -> void {
+    say("=== Square Root Approximation ===");
+    say("Enter a perfect square (4, 9, 16, 25, etc.):");
+    let num: i32 = xy_grab_i32();
+    
+    if (num < 0) {
+        say("Error: Cannot calculate square root of negative number!");
+        return;
+    }
+    
+    say("Calculating approximate √", num);
+    
+    let guess: i32 = num / 2;
+    let i: i32 = 0;
+    
+    loopwhile (i < 10) {
+        let squared: i32 = guess * guess;
+        
+        if (squared > num) {
+            guess = guess - 1;
+        }
+        
+        if (squared < num) {
+            guess = guess + 1;
+        }
+        
+        if (squared == num) {
+            say("Result: √", num, "=", guess, "(exact)");
+            return;
+        }
+        
+        i = i + 1;
+    }
+    
+    say("Result: √", num, "≈", guess, "(approximate)");
+}
+
+func minMax() -> void {
+    say("=== Min/Max ===");
+    say("Enter first number:");
+    let a: i32 = xy_grab_i32();
+    
+    say("Enter second number:");
+    let b: i32 = xy_grab_i32();
+    
+    let minVal: i32 = xy_min_i32(a, b);
+    let maxVal: i32 = xy_max_i32(a, b);
+    
+    say("Min(", a, ",", b, ") =", minVal);
+    say("Max(", a, ",", b, ") =", maxVal);
+    
+    let diff: i32 = maxVal - minVal;
+    say("Difference:", diff);
+}
+
+func main() -> i32 {
+    say("╔════════════════════════════════════╗");
+    say("║  Welcome to Xypher Calculator!     ║");
+    say("╚════════════════════════════════════╝");
+    say("");
+    say("This calculator works with integers.");
+    say("Press Ctrl+C to exit anytime.");
+    
+    let running: i32 = 1;
+    
+    loopwhile (running == 1) {
+        printMenu();
+        
+        say("Enter your choice (0-7):");
+        let choice: i32 = xy_grab_i32();
+        
+        if (choice == 1) {
+            addition();
+        }
+        
+        if (choice == 2) {
+            subtraction();
+        }
+        
+        if (choice == 3) {
+            multiplication();
+        }
+        
+        if (choice == 4) {
+            division();
+        }
+        
+        if (choice == 5) {
+            power();
+        }
+        
+        if (choice == 6) {
+            squareRoot();
+        }
+        
+        if (choice == 7) {
+            minMax();
+        }
+        
+        if (choice == 0) {
+            say("");
+            say("Thank you for using Xypher Calculator!");
+            say("Goodbye!");
+            running = 0;
+        }
+        
+        if (choice < 0) {
+            say("Invalid choice! Please select 0-7");
+        }
+        
+        if (choice > 7) {
+            say("Invalid choice! Please select 0-7");
+        }
+    }
+    
+    return 0;
+}
